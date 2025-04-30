@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+# .env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -134,3 +134,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# ignore js files (generated from ts)
+expressServer/interfaces/*.js
+expressServer/model/*.js
+expressServer/routes/*.js
+expressServer/*.js
+
+# ignore db files
+db/

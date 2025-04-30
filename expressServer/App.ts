@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as url from 'url';
 import * as bodyParser from 'body-parser';
 import { TripRouter } from './routes/TripRouter';
+import {TripModel} from './model/TripModel';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -9,10 +10,11 @@ class App {
   // ref to Express instance
   public express: express.Application;
   public tripRouter: express.Router;
+
   //Run configuration methods on the Express instance.
-  constructor() {
+  constructor(mongoDBConnection:string) {
     this.express = express();
-    this.tripRouter = new TripRouter().router;
+    this.tripRouter = new TripRouter(mongoDBConnection).router;
     this.routes();
   }
 
@@ -26,4 +28,4 @@ class App {
 
 }
 
-export {App};
+export {App}; 
