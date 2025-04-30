@@ -22,5 +22,11 @@
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/mongodb": "^4.0.6",
+    "assert": "^2.1.0",
+    "mongodb": "^6.16.0",
+    "q": "^2.0.3"
   }
 }
