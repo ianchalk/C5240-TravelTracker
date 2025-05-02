@@ -45,7 +45,7 @@ class TripModel {
         }
     }
 
-    public async retrieveTrips(response:any, value:number) {
+    public async retrieveTrips(response:any, value:String) {
         var query = this.model.findOne({tripId: value});
         try {
             const result = await query.exec();
