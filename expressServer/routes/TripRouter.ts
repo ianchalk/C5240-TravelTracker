@@ -23,7 +23,8 @@ class TripRouter {
 
 
     this.router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
-      this.tripController.getTripById(req, res, next);
+      var id = req.params.id;
+      await this.Trips.retrieveTrips(res, id);
     });
   
   }
