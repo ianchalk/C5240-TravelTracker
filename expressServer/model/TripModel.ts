@@ -15,9 +15,11 @@ class TripModel {
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
-                name: String,
+                name: {type: String, required: true},
                 description: String,
-                tripId: String
+                tripId: String,
+                userId:{type: Mongoose.Schema.Types.ObjectId, ref: 'User'},
+                isPublic: {type: Boolean, default: false},
             }, {collection: 'trips'}
         );    
     }
