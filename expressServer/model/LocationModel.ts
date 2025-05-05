@@ -37,7 +37,44 @@ class LocationModel {
         }
     }
 
-
+    public async createLocation(response: any, locationData: any) {
+        try {
+            if (!locationData.tripId) {
+                return response.status(400).json({ error: "tripId is required" });
+            }
+    
+            // Try to find and update existing trip
+            const result = await this.model.findOneAndUpdate(
+                { tripId: locationData.tripId },
+                {
+                    $push: {
+                        locations: {
+                            name: locationData.name,
+                            address: locationData.address,
+                            description: locationData.description,
+                            dates: locationData.dates,
+                            cost: locationData.cost || 0
+                        }
+                    }
+                },
+                {
+                    new: true,       // Return updated document
+                    upsert: true,     // Create if doesn't exist
+                    runValidators: true, // Validate against schema
+                    setDefaultsOnInsert: true
+                }
+            );
+    
+            // Send appropriate status code (201 for created, 200 for updated)
+            response.status(result ? 200 : 201).json(result);
+        } catch (e) {
+            console.error(e);
+            response.status(500).json({ 
+                error: "Failed to save location",
+                details: e instanceof Error ? e.message : "Unknown error"
+            });
+        }
+    }
     public async retrieveLocationsDetails(response:any, filter:Object) {
         var query = this.model.findOne(filter);
         try {
