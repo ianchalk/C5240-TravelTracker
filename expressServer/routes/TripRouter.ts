@@ -36,7 +36,7 @@ class TripRouter {
       await this.Locations.retrieveLocationsDetails(res, {tripId: id});
     });
 
-    this.router.post('/create', async (req: Request, res: Response) => {
+    this.router.post('/create', async (req: Request, res: Response, next: NextFunction) => {
       const tripData = {
           name: req.body.name,
           description: req.body.description,
@@ -48,9 +48,14 @@ class TripRouter {
       await this.Trips.createTrip(res, tripData);
     });
 
-  }
 
-  
+    this.router.put('/update/:tripId', async (req: Request, res: Response, next: NextFunction) => {
+      var tripId = req.params.tripId;
+      var updateData = req.body;
+
+      await this.Trips.updateTrip(res, tripId, updateData);
+    });
+  }
 }
 
 export { TripRouter };

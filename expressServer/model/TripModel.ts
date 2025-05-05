@@ -52,6 +52,25 @@ class TripModel {
         }
     }
 
+    public async updateTrip(response: any, tripId: string, updateData: object) {
+        try {
+            const updatedTrip = await this.model.findOneAndUpdate(
+                { tripId: tripId },
+                { $set: updateData },
+                { new: true, runValidators: true }
+            );
+    
+            if (!updatedTrip) {
+                return response.status(404).json({ error: "Trip not found" });
+            }
+    
+            response.json(updatedTrip);
+        } catch (e) {
+            console.error(e);
+            response.status(500).send(e);
+        }
+    }
+
     public async retrieveAllTrips(response:any) {
         var query = this.model.find({});
         // query.where("state");
