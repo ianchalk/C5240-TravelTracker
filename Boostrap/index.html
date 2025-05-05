@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPy6uAkukRjKiYvXVvm9Cgpl2akkoO_qLjGA&s" alt="Travel Tracker logo" height="30">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">Trips</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Social</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Reviews</a></li>
+                    </ul>
+                    <div class="d-flex">
+                        <a href="#" class="btn btn-outline-light me-2">Log In</a>
+                        <a href="#" class="btn btn-success">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center">
+        <div class="container text-center">
+            <h1 class="text-white mb-4">Looking for a place to travel?</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control form-control-lg rounded-pill py-3" placeholder="Search by city, state, or country" aria-label="Search">
+                        </div>
+                    </form>
+                    <p class="text-white small">Always ready for your next adventure</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section py-5">
+        <div class="container">
+            <div class="map-container shadow">
+                <img src="https://www.beingbridget.com/wp-content/uploads/2018/11/Screen-Shot-2018-11-09-at-12.44.07-AM.png" class="img-fluid w-100" alt="Travel Tracker Map" style="border-radius: 12px;">
+                <div class="map-overlay">
+                    <h3 class="text-white mb-3">Discover Amazing Places Near You</h3>
+                    <button class="btn btn-success">View Interactive Map</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Places Nearby Section -->
+    <section class="top-travel-trackers py-5">
+        <div class="container">
+            <h2 class="mb-4">Top Places</h2>
+            <div class="row travel-tracker-row flex-nowrap pb-3">
+                <!-- Travel Tracker Cards -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="card travel-tracker-card">
+                        <img src="https://www.intrepidtravel.com/v3/assets/blt0de87ff52d9c34a8/blt1c079125f7a95552/63c8b7421756bc0c383f419f/colombia_tayrona-np.jpg?branch=prd&width=640&quality=75&format=pjpg&auto=webp" class="card-img-top" alt="County Seats View Hike">
+                        <div class="card-body">
+                            <h5 class="card-title">Colombia</h5>
+                            <p class="card-subtitle">Bogota</p>
+                            <span class="difficulty">Love it · 4.5 (928)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card travel-tracker-card">
+                        <img src="https://assets.tripsmiths.com/images/image-with-text/527460-mt-fuji-and-cherry-blossom-shuttertong-shutterstock.png" class="card-img-top" alt="Seaview Point Loop">
+                        <div class="card-body">
+                            <h5 class="card-title">Japan</h5>
+                            <p class="card-subtitle">Tokio</p>
+                            <span class="difficulty">perfect · 4.9 (523)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card travel-tracker-card">
+                        <img src="https://lp-cms-production.imgix.net/2019-06/09a64fea2933f6da77ab07d671d1f678-south-korea.jpg?w=1095&fit=crop&crop=faces%2Cedges&auto=format&q=75" class="card-img-top" alt="Pierce-Burnett Travel Tracker">
+                        <div class="card-body">
+                            <h5 class="card-title">Korea</h5>
+                            <p class="card-subtitle">Seoul</p>
+                            <span class="difficulty">Love it · 4.8 (221)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card travel-tracker-card">
+                        <img src="https://lp-cms-production.imgix.net/2023-04/shutterstock_2105333216.jpg?auto=format,compress&q=72&w=1440&h=810&fit=crop" class="card-img-top" alt="Prairie Summit Hike">
+                        <div class="card-body">
+                            <h5 class="card-title">Switzerland</h5>
+                            <p class="card-subtitle">Zurich</p>
+                            <span class="difficulty">Amazing · 5 (345)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
