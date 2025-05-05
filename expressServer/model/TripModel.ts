@@ -34,6 +34,24 @@ class TripModel {
         }
     }
 
+    public async createTrip(response: any, tripData: any) {
+        try {
+            // Create a new document from the model
+            const newTrip = new this.model({
+                name: tripData.name,
+                description: tripData.description,
+                tripId: tripData.tripId,
+                isPublic: tripData.isPublic || false
+            });
+    
+            const result = await newTrip.save();
+            response.status(201).json(result);
+        } catch (e) {
+            console.error(e);
+            response.status(500).send(e);
+        }
+    }
+
     public async retrieveAllTrips(response:any) {
         var query = this.model.find({});
         // query.where("state");

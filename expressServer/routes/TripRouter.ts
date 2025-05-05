@@ -34,7 +34,20 @@ class TripRouter {
       var id = req.params.tripId;
       console.log('Query single trip with id: ' + id);
       await this.Locations.retrieveLocationsDetails(res, {tripId: id});
-  });
+    });
+
+    this.router.post('/create', async (req: Request, res: Response) => {
+      const tripData = {
+          name: req.body.name,
+          description: req.body.description,
+          tripId: req.body.tripId,
+          userId: req.body.userId,
+          isPublic: req.body.isPublic
+      };
+      
+      await this.Trips.createTrip(res, tripData);
+    });
+
   }
 
   
