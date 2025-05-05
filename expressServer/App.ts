@@ -14,8 +14,19 @@ class App {
   //Run configuration methods on the Express instance.
   constructor(mongoDBConnection:string) {
     this.express = express();
+    this.middleware();
     this.tripRouter = new TripRouter(mongoDBConnection).router;
     this.routes();
+  }
+
+  private middleware(): void {
+    this.express.use(bodyParser.json());
+    this.express.use(bodyParser.urlencoded({ extended: false }));
+    this.express.use( (req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      next();
+    });
   }
 
   // Configure API endpoints.
