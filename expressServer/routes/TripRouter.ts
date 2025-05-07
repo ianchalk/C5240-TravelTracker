@@ -1,16 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { TripController } from '../controllers/TripController';
 import {TripModel} from '../model/TripModel';
 import {LocationModel} from '../model/LocationModel';
 
 class TripRouter {
   public router: Router;
-  private tripController: TripController;
   public Trips:TripModel;
   public Locations:LocationModel;
 
   constructor(mongoDBConnection:string) {
-    this.tripController = new TripController();
     this.Trips = new TripModel(mongoDBConnection);
     this.Locations = new LocationModel(mongoDBConnection);
 
@@ -30,7 +27,7 @@ class TripRouter {
     // Retrieves a specific trip by tripId
     this.router.get('/:tripId', async (req: Request, res: Response, next: NextFunction) => {
       var id = req.params.tripId;
-      await this.Trips.retrieveTrips(res, id);
+      await this.Trips.retrieveTrip(res, id);
     });
   
     // Retrieves all locations for a specific trip
@@ -39,6 +36,14 @@ class TripRouter {
       console.log('Query single trip with id: ' + id);
       await this.Locations.retrieveLocationsDetails(res, {tripId: id});
     });
+
+    // Retrieves data of a specific location for a specific trip by tripId and location name
+    this.router.get('/:tripId/locations/:locationName', async (req: Request, res: Response) => {
+      var tripId = req.params.tripId;
+      var locationName = req.params.locationName;
+
+      await this.Locations.retrieveSingleLocationDetail(res, tripId, locationName);
+  });
 
     // Creates a new trip object with the given trip data
     this.router.post('/create', async (req: Request, res: Response, next: NextFunction) => {
