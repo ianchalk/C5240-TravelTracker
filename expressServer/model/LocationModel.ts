@@ -37,6 +37,7 @@ class LocationModel {
         }
     }
 
+    // Create location
     public async createLocation(response: any, locationData: any) {
         try {
             if (!locationData.tripId) {
@@ -75,6 +76,8 @@ class LocationModel {
             });
         }
     }
+
+    // Retrieve all locations for a trip
     public async retrieveLocationsDetails(response:any, filter:Object) {
         var query = this.model.findOne(filter);
         try {
@@ -83,6 +86,25 @@ class LocationModel {
         }
         catch (e) {
             console.error(e);
+        }
+    }
+
+    // Retrieve a specific location within a trip
+    public async retrieveSingleLocationDetail(response: any, tripId: string, locationName: string) {
+        try {
+            const result = await this.model.findOne(
+                { tripId: tripId, "locations.name": locationName },
+                { "locations.$": 1 }
+            );
+    
+            if (!result || !result.locations || result.locations.length === 0) {
+                return response.status(404).json({ error: "Location not found" });
+            }
+    
+            response.json(result.locations[0]);
+        } catch (e) {
+            console.error(e);
+            response.status(500).json({ error: "Server error" });
         }
     }
 
