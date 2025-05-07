@@ -1,0 +1,4 @@
+cd C:\repos\C5240-TravelTracker\expressServer
+mongosh --port 3000
+load('createDB/createTripSampleData.js');load('createDB/createAdminUser.js');exit
+mongod --auth --port 3000 -dbpath ".\db"
