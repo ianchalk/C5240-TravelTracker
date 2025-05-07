@@ -34,9 +34,9 @@ class TripModel {
         }
     }
 
+    // Create trip
     public async createTrip(response: any, tripData: any) {
         try {
-            // Create a new document from the model
             const newTrip = new this.model({
                 name: tripData.name,
                 description: tripData.description,
@@ -52,6 +52,7 @@ class TripModel {
         }
     }
 
+    // Update trip
     public async updateTrip(response: any, tripId: string, updateData: object) {
         try {
             const updatedTrip = await this.model.findOneAndUpdate(
@@ -71,10 +72,9 @@ class TripModel {
         }
     }
 
+    // Retrieves all trips
     public async retrieveAllTrips(response:any) {
         var query = this.model.find({});
-        // query.where("state");
-        // query.lt("B");
         try {
             const itemArray = await query.exec();
             response.json(itemArray);
@@ -83,8 +83,9 @@ class TripModel {
             console.error(e);
         }
     }
-
-    public async retrieveTrips(response:any, value:String) {
+    
+    // Retrieve specific trip by tripId
+    public async retrieveTrip(response:any, value:String) {
         var query = this.model.findOne({tripId: value});
         try {
             const result = await query.exec();
@@ -95,6 +96,7 @@ class TripModel {
         }
     }
 
+    // Retrieves total trip count
     public async retrieveTripCount(response:any) {
         console.log("retrieve Trip Count ...");
         var query = this.model.estimatedDocumentCount();
