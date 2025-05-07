@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as url from 'url';
 import * as bodyParser from 'body-parser';
 import { TripRouter } from './routes/TripRouter';
-import {TripModel} from './model/TripModel';
 
 // Creates and configures an ExpressJS web server.
 class App {
