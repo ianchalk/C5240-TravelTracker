@@ -143,3 +143,12 @@ expressServer/*.js
 
 # ignore db files
 db/
+
+
+createDB/
+curlCommands/
+dbCommands/
+e2e/
+node_modules/
+docs/
+Db
