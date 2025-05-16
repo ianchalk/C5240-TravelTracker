@@ -136,10 +136,10 @@ dist
 .pnp.*
 
 # ignore js files (generated from ts)
-expressServer/interfaces/*.js
-expressServer/model/*.js
-expressServer/routes/*.js
-expressServer/*.js
+#expressServer/interfaces/*.js
+#expressServer/model/*.js
+#expressServer/routes/*.js
+#expressServer/*.js
 
 # ignore db files
 db/
