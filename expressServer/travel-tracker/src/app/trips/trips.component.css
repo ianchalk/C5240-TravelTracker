@@ -1,0 +1,37 @@
+/* ...existing code... */
+.stats-bar .card {
+  background: #f8f8f5;
+  border-radius: 1rem;
+  transition: box-shadow 0.2s;
+}
+.stats-bar .card:hover {
+  box-shadow: 0 4px 24px rgba(40,52,30,0.10);
+}
+
+.travel-tracker-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  background: #fff;
+}
+.travel-tracker-card:hover {
+  box-shadow: 0 8px 32px rgba(40,52,30,0.15);
+  transform: translateY(-4px) scale(1.03);
+}
+.travel-tracker-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+@media (max-width: 991px) {
+  .row-cols-md-4 > * {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+}
+@media (max-width: 575px) {
+  .row-cols-md-4 > * {
+    width: 100%;
+  }
+}
+/* ...existing code... */
