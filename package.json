@@ -25,6 +25,9 @@
   },
   "dependencies": {
     "@types/mongodb": "^4.0.6",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "typescript": "^5.8.3",
     "assert": "^2.1.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
