@@ -1,5 +1,5 @@
 <!-- Add Trip Button -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 trips-header">
   <h2 class="mb-0">Your Trips</h2>
   <button class="btn btn-success btn-lg px-4 shadow-sm">
     <i class="fas fa-plus me-2"></i> Add New Trip
@@ -45,8 +45,8 @@
 <!-- Previous Trips Grid -->
 <h3 class="mb-4">Previous Trips</h3>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-  <div class="col" *ngFor="let trip of dummyTrips">
-    <div class="card h-100 shadow-sm travel-tracker-card">
+  <div class="col" *ngFor="let trip of dummyTrips; let i = index">
+    <div class="card h-100 shadow-sm travel-tracker-card" (click)="viewTripDetail(i)" style="cursor: pointer;">
       <img src="{{trip.image}}" class="card-img-top" alt="{{trip.name}}">
       <div class="card-body">
         <h5 class="card-title">{{trip.name}}</h5>
