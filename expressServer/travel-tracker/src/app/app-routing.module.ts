@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: '', component: WelcomepageComponent },
   { path: 'trips', component: TripsComponent },
   { path: 'tripdetail', component: TripDetailComponent },
+  { path: 'tripdetail/:id', component: TripDetailComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

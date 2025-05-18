@@ -1,43 +1,88 @@
 <div class="tripdetail-container">
   <app-header></app-header>
   <div class="tripdetail-content">
-    <button class="back-btn">&larr; Back</button>
+    <button class="back-btn" (click)="navigateBack()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Trips
+    </button>
+    
+    <h1 class="trip-title">{{ trip.name }}</h1>
+    
     <div class="trip-meta">
-      <div>Trip Date: {{ trip.date }}</div>
-      <div>Trip Amount Spent: ${{ trip.amountSpent }}</div>
-      <div>Trip End Date: {{ trip.endDate }}</div>
-    </div>
-    <div class="places-carousel">
-      <div *ngFor="let place of trip.places; let i = index" 
-           [class.selected]="i === selectedPlaceIndex" 
-           (click)="selectPlace(i)" 
-           class="place-card">
-        {{ place.name }}<br>
-        ({{ place.pictures.length }} picture{{ place.pictures.length > 1 ? 's' : '' }})
+      <div>
+        <span class="trip-meta-label">Start Date</span>
+        <span class="trip-meta-value">{{ trip.date | date:'mediumDate' }}</span>
       </div>
+      <div>
+        <span class="trip-meta-label">End Date</span>
+        <span class="trip-meta-value">{{ trip.endDate | date:'mediumDate' }}</span>
+      </div>
+      <div>
+        <span class="trip-meta-label">Duration</span>
+        <span class="trip-meta-value">{{ calculateDuration() }} days</span>
+      </div>
+      <div>
+        <span class="trip-meta-label">Budget</span>
+        <span class="trip-meta-value">${{ trip.amountSpent | number:'1.0-0' }}</span>
+      </div>
+    </div>
+    
+    <div class="places-carousel-container">
+      <div class="places-carousel">
+        <div *ngFor="let place of trip.places; let i = index" 
+             [class.selected]="i === selectedPlaceIndex" 
+             (click)="selectPlace(i)" 
+             class="place-card">
+          <div class="place-name">{{ place.name }}</div>
+          <div class="place-pics">
+            {{ place.pictures.length }} photo{{ place.pictures.length > 1 ? 's' : '' }}
+          </div>
+        </div>
+      </div>
+      
       <div class="carousel-dots">
         <span *ngFor="let place of trip.places; let i = index" 
-              [class.active-dot]="i === selectedPlaceIndex">•</span>
+              class="dot"
+              [class.active-dot]="i === selectedPlaceIndex"></span>
       </div>
     </div>
+    
     <div class="tripdetail-main">
       <div class="place-notes">
-        <button class="add-place-btn">Add Place</button>
-        <button class="delete-place-btn">Delete Place</button>
+        <div class="place-actions">
+          <button class="add-place-btn">+ Add Place</button>
+          <button class="delete-place-btn">Delete Place</button>
+        </div>
+        
         <div class="notes-box">
+          <h3 style="margin-top: 0; color: #333; margin-bottom: 16px;">
+            About {{ trip.places[selectedPlaceIndex].name }}
+          </h3>
           {{ trip.places[selectedPlaceIndex].notes }}
         </div>
       </div>
+      
       <div class="place-pictures">
-        <div *ngFor="let pic of trip.places[selectedPlaceIndex].pictures; let j = index" class="picture-thumb">
-          <img [src]="pic" alt="Place picture {{j+1}}" />
+        <h3 class="pictures-title">Photos</h3>
+        <div class="pictures-grid">
+          <div *ngFor="let pic of trip.places[selectedPlaceIndex].pictures.slice(0, 4); let j = index" 
+               class="picture-thumb">
+            <img [src]="pic" alt="{{ trip.places[selectedPlaceIndex].name }} photo {{j+1}}" />
+          </div>
         </div>
-        <button class="view-all-btn">View All</button>
-        <button class="add-pictures-btn">Add pictures</button>
+        
+        <div class="pictures-actions">
+          <button class="view-all-btn">View All</button>
+          <button class="add-pictures-btn">+ Add Photos</button>
+        </div>
       </div>
     </div>
+    
     <div class="map-section">
-      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?fit=crop&w=800&q=80" alt="Map" class="map-img" />
+      <h2 class="map-section-title">Trip Map</h2>
+      <img [src]="getMapImage()" alt="Map of {{ trip.name }}" class="map-img" />
     </div>
   </div>
   <app-footer></app-footer>
