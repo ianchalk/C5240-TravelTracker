@@ -45,8 +45,8 @@
 <!-- Previous Trips Grid -->
 <h3 class="mb-4">Previous Trips</h3>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-  <div class="col" *ngFor="let trip of dummyTrips">
-    <div class="card h-100 shadow-sm travel-tracker-card">
+  <div class="col" *ngFor="let trip of dummyTrips; let i = index">
+    <div class="card h-100 shadow-sm travel-tracker-card" (click)="viewTripDetail(i)" style="cursor: pointer;">
       <img src="{{trip.image}}" class="card-img-top" alt="{{trip.name}}">
       <div class="card-body">
         <h5 class="card-title">{{trip.name}}</h5>

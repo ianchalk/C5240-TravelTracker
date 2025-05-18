@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { HeaderComponent } from '../shared/header/header.component';
-import { FooterComponent } from '../shared/footer/footer.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 interface Place {
@@ -22,7 +20,7 @@ interface Trip {
 @Component({
   selector: 'app-tripdetail',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, DatePipe, RouterModule],
+  imports: [CommonModule, DatePipe, RouterModule],
   templateUrl: './tripdetail.component.html',
   styleUrls: ['./tripdetail.component.css']
 })
@@ -77,7 +75,15 @@ export class TripDetailComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
-        // In a real app, fetch trip data using this ID
+        // Update the trip ID to match the route parameter
+        this.trip.id = id;
+        
+        // In a real app, you would fetch trip data from a service here
+        // For example:
+        // this.tripService.getTripById(id).subscribe(tripData => {
+        //   this.trip = tripData;
+        // });
+        
         console.log('Trip ID from route:', id);
       }
     });
