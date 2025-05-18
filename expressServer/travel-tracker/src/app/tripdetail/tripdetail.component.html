@@ -1,0 +1,44 @@
+<div class="tripdetail-container">
+  <app-header></app-header>
+  <div class="tripdetail-content">
+    <button class="back-btn">&larr; Back</button>
+    <div class="trip-meta">
+      <div>Trip Date: {{ trip.date }}</div>
+      <div>Trip Amount Spent: ${{ trip.amountSpent }}</div>
+      <div>Trip End Date: {{ trip.endDate }}</div>
+    </div>
+    <div class="places-carousel">
+      <div *ngFor="let place of trip.places; let i = index" 
+           [class.selected]="i === selectedPlaceIndex" 
+           (click)="selectPlace(i)" 
+           class="place-card">
+        {{ place.name }}<br>
+        ({{ place.pictures.length }} picture{{ place.pictures.length > 1 ? 's' : '' }})
+      </div>
+      <div class="carousel-dots">
+        <span *ngFor="let place of trip.places; let i = index" 
+              [class.active-dot]="i === selectedPlaceIndex">•</span>
+      </div>
+    </div>
+    <div class="tripdetail-main">
+      <div class="place-notes">
+        <button class="add-place-btn">Add Place</button>
+        <button class="delete-place-btn">Delete Place</button>
+        <div class="notes-box">
+          {{ trip.places[selectedPlaceIndex].notes }}
+        </div>
+      </div>
+      <div class="place-pictures">
+        <div *ngFor="let pic of trip.places[selectedPlaceIndex].pictures; let j = index" class="picture-thumb">
+          <img [src]="pic" alt="Place picture {{j+1}}" />
+        </div>
+        <button class="view-all-btn">View All</button>
+        <button class="add-pictures-btn">Add pictures</button>
+      </div>
+    </div>
+    <div class="map-section">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?fit=crop&w=800&q=80" alt="Map" class="map-img" />
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

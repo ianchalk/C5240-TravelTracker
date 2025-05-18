@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { TripsComponent } from './trips/trips.component';
+import { TripDetailComponent } from './tripdetail/tripdetail.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: WelcomepageComponent },
   { path: 'trips', component: TripsComponent },
+  { path: 'tripdetail', component: TripDetailComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
