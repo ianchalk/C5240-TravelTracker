@@ -1,4 +1,7 @@
 /* ...existing code... */
+.trips-header {
+  margin-top: 5rem;
+}
 .stats-bar .card {
   background: #f8f8f5;
   border-radius: 1rem;
