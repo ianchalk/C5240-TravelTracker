@@ -16,6 +16,6 @@ export class TripproxyService {
   }
 
   getItems(index: string) {
-    return this.httpClient.get( this.hostUrl + 'trip/' + index);
+    return this.httpClient.get( this.hostUrl + 'trip/' + index + '/locations');
   }
 }
