@@ -1,1 +1,41 @@
 <p>locations works!</p>
+<div class="container">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel" style="color:white; background-color:#337ab7"> 
+			<h3>{{tripId}}. List - {{name}}</h3>
+			<div>
+			<a style="color:white" href="#"><span class="glyphicon glyphicon-edit"></span></a>
+			<a style="color:white" href="#"><span class="glyphicon glyphicon-trash"></span></a>
+			<a style="color:white" href="#"><span class="glyphicon glyphicon-ok"></span></a>
+			</div>
+		</div>
+            <!-- Table -->
+            <table class="table" style="font-size:10pt;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Address</th>
+                        <th>Dates</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="locationItems != null && locationItems.locations != null">
+                    <tr *ngFor="let result of locationItems.locations; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ result.name }}</td>
+                        <td>{{ result.description }}</td>
+                        <td>{{ result.address }}</td>
+                        <td>
+                            {{ result.dates[0] | date:'mediumDate' }} –
+                            {{ result.dates[1] | date:'mediumDate' }}
+                        </td>
+                        <td>${{ result.cost }}</td>
+                    </tr>
+                </tbody>
+            </table>
+  		<!-- Table -->
+	</div>
+</div>
