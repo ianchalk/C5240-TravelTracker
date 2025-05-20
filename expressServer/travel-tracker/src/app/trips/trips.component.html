@@ -1,11 +1,4 @@
 <!-- filepath: /Users/jenitza/Jenitza_Mac_Doc/Seattle_University/SpringQuarter2025/Software_as_Service/C5240-TravelTracker/travel-tracker/src/app/trips/trips.component.html -->
-<!-- DEBUG INFORMATION -->
-<div class="alert alert-info mb-4">
-  <h4>Debug Information</h4>
-  <p>Loading: {{loading}}</p>
-  <p>Error: {{error}}</p>
-  <p>Trips length: {{trips.length}}</p>
-</div>
 
 <!-- Add Trip Button -->
 <div class="d-flex justify-content-between align-items-center mb-4 trips-header">
@@ -29,7 +22,7 @@
     <div class="card text-center shadow-sm border-0">
       <div class="card-body">
         <h5 class="card-title mb-1">Total Spent</h5>
-        <p class="display-6 fw-bold mb-0">$0</p>
+        <p class="display-6 fw-bold mb-0">${{totalAmountSpent.toFixed(2)}}</p>
       </div>
     </div>
   </div>
@@ -37,7 +30,7 @@
     <div class="card text-center shadow-sm border-0">
       <div class="card-body">
         <h5 class="card-title mb-1">Countries Visited</h5>
-        <p class="display-6 fw-bold mb-0">0</p>
+        <p class="display-6 fw-bold mb-0">{{visitedCountries.size}}</p>
       </div>
     </div>
   </div>

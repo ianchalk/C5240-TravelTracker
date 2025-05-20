@@ -20,6 +20,7 @@ class TripModel {
                 tripId: String,
                 userId:{type: Mongoose.Schema.Types.ObjectId, ref: 'User'},
                 isPublic: {type: Boolean, default: false},
+                amount_spent: {type: Number, default: 0}
             }, {collection: 'trips'}
         );    
     }
@@ -41,7 +42,8 @@ class TripModel {
                 name: tripData.name,
                 description: tripData.description,
                 tripId: tripData.tripId,
-                isPublic: tripData.isPublic || false
+                isPublic: tripData.isPublic || false,
+                amount_spent: tripData.amount_spent || 0
             });
     
             const result = await newTrip.save();

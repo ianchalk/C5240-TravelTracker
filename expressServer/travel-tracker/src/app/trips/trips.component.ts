@@ -10,6 +10,8 @@ interface TripData {
   name: string;
   location: string;
   image: string;
+  amount_spent: number;
+  country: string;
   [key: string]: any; // For other possible properties
 }
 
@@ -25,6 +27,8 @@ export class TripsComponent implements OnInit {
   trips: TripData[] = [];
   loading: boolean = true;
   error: boolean = false;
+  totalAmountSpent: number = 0;
+  visitedCountries: Set<string> = new Set<string>();
 
   constructor(private router: Router, private tripProxy: TripproxyService) {}
 
@@ -36,6 +40,8 @@ export class TripsComponent implements OnInit {
   fetchTrips() {
     this.loading = true;
     this.error = false;
+    this.totalAmountSpent = 0; // Reset total amount
+    this.visitedCountries.clear(); // Reset countries set
     console.log("Fetching trips from MongoDB...");
     
     this.tripProxy.getListsIndex().subscribe({
@@ -44,16 +50,30 @@ export class TripsComponent implements OnInit {
         if (result && result.length > 0) {
           console.log("Raw data from MongoDB:", result);
           this.trips = result.map(trip => {
+            // Calculate total amount spent
+            if (trip.amount_spent && !isNaN(parseFloat(trip.amount_spent))) {
+              this.totalAmountSpent += parseFloat(trip.amount_spent);
+            }
+            
+            // Add country to visited countries set (converted to lowercase)
+            if (trip.country) {
+              this.visitedCountries.add(trip.country.toLowerCase());
+            }
+            
             // Map MongoDB trips to the format our UI expects
             return {
               id: trip._id || trip.tripId || trip.id || '',
               name: trip.name || 'Unnamed Trip',
               location: trip.description || trip.location || 'Unknown Location',
               // Use default image if none is provided
-              image: trip.image || 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80'
+              image: trip.image || 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
+              amount_spent: trip.amount_spent || 0,
+              country: trip.country || ''
             };
           });
           console.log("Mapped trips from MongoDB:", this.trips);
+          console.log("Total amount spent:", this.totalAmountSpent);
+          console.log("Total countries visited:", this.visitedCountries.size);
         } else {
           // No data returned
           console.log("No trips found in MongoDB.");
