@@ -1,0 +1,48 @@
+<div class="container  mat-app-background">
+<p>
+<mat-toolbar color='primary'>
+  <button class="example-icon" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <button class="example-icon" mat-icon-button aria-label="Example icon-button with menu icon">
+    <mat-menu #menu="matMenu">
+      <div mat-menu-item>Item 1</div>
+      <div mat-menu-item>Item 2</div>
+    </mat-menu>
+  </button>
+  <span>Trips</span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>share</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>help</mat-icon>
+  </button>
+</mat-toolbar>
+</p>
+
+<h3 class="panel-heading">Active Trips</h3>
+
+<div class="panel panel-default">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <a [routerLink]="['/trips/' + element.tripId]" [state]="{name: element.name}" class="btn" style="color:white" role="button">{{element.name}}</a>
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>    
+
+    </table>
+</div>
+<button mat-button (click)="clickEvent()" color="primary">Back</button>  
+
+</div> <!-- /container -->
