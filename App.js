@@ -26,7 +26,7 @@ var App = /** @class */ (function () {
     App.prototype.routes = function () {
         var router = express.Router();
         this.express.use('/trip', this.tripRouter);
-        this.express.use('/', router);
+        this.express.use('/', express.static(__dirname + '/dist'));
     };
     return App;
 }());
