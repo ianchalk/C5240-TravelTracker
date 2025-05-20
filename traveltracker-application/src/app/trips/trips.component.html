@@ -28,7 +28,7 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
         <td mat-cell *matCellDef="let element">
-          <a [routerLink]="['/trips/' + element.tripId]" [state]="{name: element.name}" class="btn" style="color:white" role="button">{{element.name}}</a>
+          <a [routerLink]="['/trips/' + element.tripId]" [state]="{name: element.name}" class="btn" style="color:black" role="button">{{element.name}}</a>
         </td>
       </ng-container>
   
