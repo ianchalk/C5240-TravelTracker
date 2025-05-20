@@ -24,11 +24,20 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@angular/cdk": "^19.2.16",
     "@angular/cli": "^19.2.12",
+    "@angular/material": "^19.2.16",
+    "@angular/router": "^19.2.11",
     "@types/mongodb": "^4.0.6",
     "assert": "^2.1.0",
+<<<<<<< Updated upstream:expressServer/package.json
+=======
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+>>>>>>> Stashed changes:package.json
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
-    "q": "^2.0.3"
+    "q": "^2.0.3",
+    "typescript": "^5.8.3"
   }
 }
