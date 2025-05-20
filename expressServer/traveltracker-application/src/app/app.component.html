@@ -14,6 +14,28 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
+<header class="fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" routerLink="/">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPy6uAkukRjKiYvXVvm9Cgpl2akkoO_qLjGA&s" alt="Travel Tracker logo" height="30">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" routerLink="/trips">Trips</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/social">Social</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/reviews">Reviews</a></li>
+        </ul>
+        <div class="d-flex">
+          <a routerLink="/login" class="btn btn-outline-light me-2">Log In</a>
+          <a routerLink="/signup" class="btn btn-success">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
 
 <router-outlet />
