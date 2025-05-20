@@ -116,6 +116,10 @@ header {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.page-content {
+  padding-top: 70px; /* Adjust this if your navbar is taller than 56px */
+}
+
 /* Top travel-tracker section */
 .top-travel-trackers {
     background-color: #f8f8f5;
