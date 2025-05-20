@@ -6,8 +6,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TripproxyService {
 
-  //hostUrl:string = 'https://traveltracker2025.azurewebsites.net/';
-  hostUrl:string = 'http://localhost:8080/';
+  hostUrl:string = 'https://traveltracker2025.azurewebsites.net/';
+  //hostUrl:string = 'http://localhost:8080/';
 
   constructor(private httpClient: HttpClient) { }
 
