@@ -46,9 +46,9 @@ describe('Test trip lists result', function () {
 		expect(response.body).to.satisfy(
 			function (body) {
 				for (var i = 0; i < body.length; i++) {
-					expect(body[i]).to.have.property('name');
-					expect(body[i]).to.have.property('description');
-					expect(body[i]).to.have.property('tripId');
+					expect(body[i].name).to.be.a('string');
+					expect(body[i].description).to.be.a('string');
+					expect(body[i].tripId).to.be.a('string');
 				}
 				return true;
 			});
