@@ -84,6 +84,24 @@ class TripRouter {
       }
       await this.Locations.createLocation(res, locationData);
     });
+
+    // Alternative endpoint for creating locations (simplified path)
+    this.router.post('/:tripId/locations', async (req: Request, res: Response, next: NextFunction) => {
+      var id = req.params.tripId;
+      const locationData = {
+        tripId: id,
+        name: req.body.name,
+        address: req.body.address,
+        description: req.body.description,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        notes: req.body.notes,
+        photos: req.body.photos || [],
+        dates: req.body.dates,
+        cost: req.body.cost
+      }
+      await this.Locations.createLocation(res, locationData);
+    });
     
     // Creates a new trip with initial places
     this.router.post('/create-with-places', async (req: Request, res: Response, next: NextFunction) => {

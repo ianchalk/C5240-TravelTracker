@@ -69,7 +69,7 @@
     <div class="tripdetail-main" *ngIf="!loading && !error && trip.places.length > 0">
       <div class="place-notes">
         <div class="place-actions">
-          <button class="add-place-btn">+ Add Place</button>
+          <button class="add-place-btn" (click)="navigateToAddPlace()">+ Add Place</button>
           <button class="delete-place-btn">Delete Place</button>
         </div>
         

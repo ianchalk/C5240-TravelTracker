@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, NavigationEnd } from '@angular/router';
 import { TripproxyService } from '../tripproxy.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 interface Place {
   name: string;
@@ -26,7 +28,7 @@ interface Trip {
   templateUrl: './tripdetail.component.html',
   styleUrls: ['./tripdetail.component.css']
 })
-export class TripDetailComponent implements OnInit {
+export class TripDetailComponent implements OnInit, OnDestroy {
   trip: Trip = {
     id: '',
     name: '',
@@ -39,6 +41,7 @@ export class TripDetailComponent implements OnInit {
   selectedPlaceIndex = 0;
   loading: boolean = true;
   error: boolean = false;
+  private navigationSubscription?: Subscription;
   
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +50,19 @@ export class TripDetailComponent implements OnInit {
   ) {}
   
   ngOnInit() {
+    // Subscribe to navigation events to refresh data when returning from add-place
+    this.navigationSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        // Check if we're on a trip detail page and refresh if needed
+        if (event.url.includes('/tripdetail/') && !event.url.includes('/add-place')) {
+          const id = this.route.snapshot.paramMap.get('id');
+          if (id) {
+            this.fetchTripDetails(id);
+          }
+        }
+      });
+
     // Get trip ID from route parameter
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -54,6 +70,21 @@ export class TripDetailComponent implements OnInit {
         this.fetchTripDetails(id);
       }
     });
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
+
+  // Add method to refresh trip data (useful when returning from add-place)
+  refreshTripData() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.fetchTripDetails(id);
+    }
   }
 
   fetchTripDetails(tripId: string) {
@@ -157,6 +188,10 @@ export class TripDetailComponent implements OnInit {
   
   navigateBack() {
     this.router.navigate(['/trips']);
+  }
+  
+  navigateToAddPlace() {
+    this.router.navigate(['/tripdetail', this.trip.id, 'add-place']);
   }
   
   calculateDuration(): number {

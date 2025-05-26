@@ -72,6 +72,19 @@ export class TripproxyService {
       );
   }
 
+  // Create a new place for an existing trip
+  createPlaceForTrip(placeData: any): Observable<any> {
+    console.log('TripproxyService: Creating place for trip:', placeData);
+    return this.httpClient.post<any>(this.hostUrl + 'trip/' + placeData.tripId + '/locations/create', placeData)
+      .pipe(
+        tap(data => console.log('TripproxyService: Place created successfully:', data)),
+        catchError(error => {
+          console.error('Error creating place for trip:', error);
+          return of({ success: false, error: error.message });
+        })
+      );
+  }
+
   // Upload photos (placeholder for future implementation)
   uploadPhoto(photo: File): Observable<any> {
     // This would typically use FormData and a file upload endpoint
