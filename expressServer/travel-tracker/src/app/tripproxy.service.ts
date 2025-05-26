@@ -58,4 +58,25 @@ export class TripproxyService {
         })
       );
   }
+
+  // Create a new trip with places
+  createTripWithPlaces(tripData: any): Observable<any> {
+    console.log('TripproxyService: Creating trip with places:', tripData);
+    return this.httpClient.post<any>(this.hostUrl + 'trip/create-with-places', tripData)
+      .pipe(
+        tap(data => console.log('TripproxyService: Trip created successfully:', data)),
+        catchError(error => {
+          console.error('Error creating trip with places:', error);
+          return of({ success: false, error: error.message });
+        })
+      );
+  }
+
+  // Upload photos (placeholder for future implementation)
+  uploadPhoto(photo: File): Observable<any> {
+    // This would typically use FormData and a file upload endpoint
+    // For now, return a mock implementation
+    console.log('TripproxyService: Photo upload requested for:', photo.name);
+    return of({ success: true, photoUrl: 'mock-photo-url' });
+  }
 }

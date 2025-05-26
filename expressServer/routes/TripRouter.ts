@@ -75,10 +75,71 @@ class TripRouter {
         name: req.body.name,
         address: req.body.address,
         description: req.body.description,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        notes: req.body.notes,
+        photos: req.body.photos || [],
         dates: req.body.dates,
         cost: req.body.cost
       }
       await this.Locations.createLocation(res, locationData);
+    });
+    
+    // Creates a new trip with initial places
+    this.router.post('/create-with-places', async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        // Generate a unique trip ID
+        const tripId = Date.now().toString();
+        
+        const tripData = {
+          name: req.body.name,
+          description: req.body.description,
+          tripId: tripId,
+          userId: req.body.userId,
+          isPublic: req.body.isPublic || false,
+          amount_spent: req.body.amount_spent || 0
+        };
+        
+        // Create the trip first
+        const tripResult = await this.Trips.createTrip(res, tripData);
+        
+        // If trip creation was successful and places are provided
+        if (req.body.places && req.body.places.length > 0) {
+          // Create each place/location
+          for (const place of req.body.places) {
+            const locationData = {
+              tripId: tripId,
+              name: place.name,
+              address: place.address || '',
+              description: place.description || '',
+              startDate: place.startDate,
+              endDate: place.endDate,
+              notes: place.notes || '',
+              photos: place.photos || [],
+              cost: place.cost || 0
+            };
+            
+            await this.Locations.createLocation(res, locationData);
+          }
+        }
+        
+        // Return success response with trip ID
+        if (!res.headersSent) {
+          res.status(201).json({ 
+            success: true, 
+            message: 'Trip created successfully with places',
+            tripId: tripId 
+          });
+        }
+      } catch (error) {
+        console.error('Error creating trip with places:', error);
+        if (!res.headersSent) {
+          res.status(500).json({ 
+            success: false, 
+            message: 'Error creating trip with places' 
+          });
+        }
+      }
     });
   }
 }

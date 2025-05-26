@@ -20,7 +20,12 @@ class LocationModel {
                     name: String,
                     address: String,
                     description: String,
-                    dates: [Date],
+                    startDate: Date,
+                    endDate: Date,
+                    duration: Number, // calculated field in days
+                    notes: String, // separate from description for user notes
+                    photos: [String], // array of photo URLs/paths
+                    dates: [Date], // keeping for backward compatibility
                     cost: Number
                 }]
             }, {collection: 'locations'}
@@ -43,6 +48,14 @@ class LocationModel {
             if (!locationData.tripId) {
                 return response.status(400).json({ error: "tripId is required" });
             }
+
+            // Calculate duration if startDate and endDate are provided
+            let duration = 0;
+            if (locationData.startDate && locationData.endDate) {
+                const start = new Date(locationData.startDate);
+                const end = new Date(locationData.endDate);
+                duration = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+            }
     
             // Try to find and update existing trip
             const result = await this.model.findOneAndUpdate(
@@ -53,6 +66,11 @@ class LocationModel {
                             name: locationData.name,
                             address: locationData.address,
                             description: locationData.description,
+                            startDate: locationData.startDate,
+                            endDate: locationData.endDate,
+                            duration: duration,
+                            notes: locationData.notes,
+                            photos: locationData.photos || [],
                             dates: locationData.dates,
                             cost: locationData.cost || 0
                         }

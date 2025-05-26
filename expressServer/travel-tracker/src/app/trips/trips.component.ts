@@ -100,4 +100,9 @@ export class TripsComponent implements OnInit {
       this.router.navigate(['/tripdetail', tripId]);
     }
   }
+
+  goToAddTrip() {
+    console.log('Navigating to add trip page');
+    this.router.navigate(['/add-trips']);
+  }
 }
