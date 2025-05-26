@@ -7,9 +7,22 @@
       Back to Trips
     </button>
     
-    <h1 class="trip-title">{{ trip.name }}</h1>
+    <!-- Loading indicator -->
+    <div class="text-center my-5" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading trip details...</p>
+    </div>
     
-    <div class="trip-meta">
+    <!-- Error message -->
+    <div class="alert alert-warning" *ngIf="error">
+      <p>Failed to load trip details from server.</p>
+    </div>
+    
+    <h1 class="trip-title" *ngIf="!loading">{{ trip.name }}</h1>
+    
+    <div class="trip-meta" *ngIf="!loading && !error">
       <div>
         <span class="trip-meta-label">Start Date</span>
         <span class="trip-meta-value">{{ trip.date | date:'mediumDate' }}</span>
@@ -28,7 +41,12 @@
       </div>
     </div>
     
-    <div class="places-carousel-container">
+    <!-- No places message -->
+    <div class="alert alert-info" *ngIf="!loading && !error && trip.places.length === 0">
+      <p>No places found for this trip. Add a new place to get started!</p>
+    </div>
+    
+    <div class="places-carousel-container" *ngIf="!loading && !error && trip.places.length > 0">
       <div class="places-carousel">
         <div *ngFor="let place of trip.places; let i = index" 
              [class.selected]="i === selectedPlaceIndex" 
@@ -41,14 +59,14 @@
         </div>
       </div>
       
-      <div class="carousel-dots">
+      <div class="carousel-dots" *ngIf="trip.places.length > 0">
         <span *ngFor="let place of trip.places; let i = index" 
               class="dot"
               [class.active-dot]="i === selectedPlaceIndex"></span>
       </div>
     </div>
     
-    <div class="tripdetail-main">
+    <div class="tripdetail-main" *ngIf="!loading && !error && trip.places.length > 0">
       <div class="place-notes">
         <div class="place-actions">
           <button class="add-place-btn">+ Add Place</button>
@@ -57,18 +75,19 @@
         
         <div class="notes-box">
           <h3 style="margin-top: 0; color: #333; margin-bottom: 16px;">
-            About {{ trip.places[selectedPlaceIndex].name }}
+            About {{ trip.places[selectedPlaceIndex] ? trip.places[selectedPlaceIndex].name : 'This Place' }}
           </h3>
-          {{ trip.places[selectedPlaceIndex].notes }}
+          {{ trip.places[selectedPlaceIndex] ? trip.places[selectedPlaceIndex].notes : 'No notes available for this place.' }}
         </div>
       </div>
       
-      <div class="place-pictures">
+      <div class="place-pictures" *ngIf="trip.places[selectedPlaceIndex] && trip.places[selectedPlaceIndex].pictures && trip.places[selectedPlaceIndex].pictures.length > 0">
         <h3 class="pictures-title">Photos</h3>
         <div class="pictures-grid">
           <div *ngFor="let pic of trip.places[selectedPlaceIndex].pictures.slice(0, 4); let j = index" 
                class="picture-thumb">
-            <img [src]="pic" alt="{{ trip.places[selectedPlaceIndex].name }} photo {{j+1}}" />
+            <img [src]="pic" [alt]="(trip.places[selectedPlaceIndex].name || 'Place') + ' photo ' + (j+1)" 
+                 onerror="this.src='https://via.placeholder.com/150?text=No+Image'" />
           </div>
         </div>
         

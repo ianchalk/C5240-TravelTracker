@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TripproxyService } from '../tripproxy.service';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Place {
   name: string;
@@ -20,54 +22,28 @@ interface Trip {
 @Component({
   selector: 'app-tripdetail',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule],
+  imports: [CommonModule, DatePipe, RouterModule, HttpClientModule],
   templateUrl: './tripdetail.component.html',
   styleUrls: ['./tripdetail.component.css']
 })
 export class TripDetailComponent implements OnInit {
   trip: Trip = {
-    id: '1',
-    name: 'Pacific Northwest Adventure',
-    date: '2025-05-01',
-    amountSpent: 1200,
-    endDate: '2025-05-10',
-    places: [
-      {
-        name: 'Mount Rainier',
-        notes: 'Beautiful hike through alpine meadows surrounded by wildflowers. The views from Paradise were absolutely breathtaking! We took the Skyline Trail which was moderate difficulty but well worth the effort. The glacier views were spectacular and we even spotted some wildlife including marmots and deer. Make sure to bring layers as the weather can change quickly even in summer.',
-        pictures: [
-          'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1606117331085-5760e3b58520?auto=format&fit=crop&w=600&q=80',
-          'https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/styles/full_width/public/thumbnails/image/Rainier89_mount_rainier_puyallup_daffodil_field_04-08-89.jpg?itok=mwl6U_hJ'
-        ]
-      },
-      {
-        name: 'Seattle',
-        notes: 'Explored the vibrant city of Seattle starting with Pike Place Market where we watched the famous fish throwing and enjoyed local coffee. Visited the Space Needle for panoramic views of the city and Puget Sound. The Chihuly Garden and Glass exhibit was a highlight with incredible glass artwork. Ended the day with a delicious seafood dinner at the waterfront.',
-        pictures: [
-          'https://images.unsplash.com/photo-1502175353174-a7a70e73b362?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1538097304804-2a1b932466a9?auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1490879112094-281fea0883dc?auto=format&fit=crop&w=600&q=80'
-        ]
-      },
-      {
-        name: 'Olympic National Park',
-        notes: 'One of the most diverse national parks with incredible range of ecosystems. Started at Hurricane Ridge for mountain views, then explored the Hoh Rainforest with its moss-draped trees and emerald ambiance. Finished the day at Ruby Beach watching the sunset over sea stacks and driftwood. The contrast between rainforest and coastline in one day was amazing!',
-        pictures: [
-          'https://images.unsplash.com/photo-1527489377706-5bf97e608852?auto=format&fit=crop&w=600&q=80',
-          'https://lp-cms-production.imgix.net/2024-04/GettyImages-1440851155.jpg?w=600&h=400',
-          'https://olympicpeninsula.org/wp-content/uploads/2018/07/Hall-of-Mosses-Trail-Hoh-Rain-Forest-2.jpg'
-        ]
-      }
-    ]
+    id: '',
+    name: '',
+    date: '',
+    amountSpent: 0,
+    endDate: '',
+    places: []
   };
   
   selectedPlaceIndex = 0;
+  loading: boolean = true;
+  error: boolean = false;
   
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private tripProxy: TripproxyService
   ) {}
   
   ngOnInit() {
@@ -75,16 +51,102 @@ export class TripDetailComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
-        // Update the trip ID to match the route parameter
-        this.trip.id = id;
+        this.fetchTripDetails(id);
+      }
+    });
+  }
+
+  fetchTripDetails(tripId: string) {
+    this.loading = true;
+    this.error = false;
+    
+    // First get the trip basic info
+    this.tripProxy.getListsIndex().subscribe({
+      next: (trips: any[]) => {
+        console.log('All trips:', trips);
+        // Find the trip with matching ID
+        const tripData = trips.find(trip => trip._id === tripId || trip.id === tripId || trip.tripId === tripId);
         
-        // In a real app, you would fetch trip data from a service here
-        // For example:
-        // this.tripService.getTripById(id).subscribe(tripData => {
-        //   this.trip = tripData;
-        // });
+        if (tripData) {
+          console.log('Found trip data:', tripData);
+          // Initialize trip with basic data
+          this.trip.id = tripId;
+          this.trip.name = tripData.name || 'Unnamed Trip';
+          this.trip.amountSpent = tripData.amount_spent || 0;
+          
+          // Now fetch the locations (places) for this trip
+          this.fetchTripLocations(tripId);
+        } else {
+          console.error('Trip not found with ID:', tripId);
+          this.error = true;
+          this.loading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching trips:', err);
+        this.error = true;
+        this.loading = false;
+      }
+    });
+  }
+
+  fetchTripLocations(tripId: string) {
+    this.tripProxy.getItems(tripId).subscribe({
+      next: (locationData: any) => {
+        console.log('Location data received:', locationData);
         
-        console.log('Trip ID from route:', id);
+        if (locationData && locationData.locations && locationData.locations.length > 0) {
+          // Set trip start/end date from first/last location if available
+          const dates = locationData.locations
+            .filter((loc: any) => loc.startDate || loc.endDate)
+            .map((loc: any) => ({
+              start: loc.startDate ? new Date(loc.startDate) : null,
+              end: loc.endDate ? new Date(loc.endDate) : null
+            }))
+            .filter((d: any) => d.start || d.end);
+            
+          if (dates.length > 0) {
+            // Find earliest start date and latest end date
+            const startDates = dates.filter((d: any) => d.start).map((d: any) => d.start);
+            const endDates = dates.filter((d: any) => d.end).map((d: any) => d.end);
+            
+            if (startDates.length > 0) {
+              this.trip.date = new Date(Math.min(...startDates.map((d: Date) => d.getTime()))).toISOString().split('T')[0];
+            }
+            
+            if (endDates.length > 0) {
+              this.trip.endDate = new Date(Math.max(...endDates.map((d: Date) => d.getTime()))).toISOString().split('T')[0];
+            }
+          } else {
+            // If no dates, set defaults to today
+            this.trip.date = new Date().toISOString().split('T')[0];
+            this.trip.endDate = new Date().toISOString().split('T')[0];
+          }
+          
+          // Map location data to Place objects
+          this.trip.places = locationData.locations.map((location: any) => {
+            return {
+              name: location.name || 'Unnamed Location',
+              notes: location.notes || location.description || '',
+              pictures: location.photos || []
+            };
+          });
+          
+          console.log('Mapped trip data:', this.trip);
+        } else {
+          // If no locations, set default values
+          this.trip.date = new Date().toISOString().split('T')[0];
+          this.trip.endDate = new Date().toISOString().split('T')[0];
+          this.trip.places = [];
+        }
+        
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching location details:', err);
+        // Keep the basic trip data but mark that we had an error with locations
+        this.error = true;
+        this.loading = false;
       }
     });
   }
@@ -98,6 +160,9 @@ export class TripDetailComponent implements OnInit {
   }
   
   calculateDuration(): number {
+    if (!this.trip || !this.trip.date || !this.trip.endDate) {
+      return 0;
+    }
     const startDate = new Date(this.trip.date);
     const endDate = new Date(this.trip.endDate);
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
@@ -115,7 +180,10 @@ export class TripDetailComponent implements OnInit {
     ];
     
     // Use the trip ID to consistently pick the same map image for a trip
-    const index = parseInt(this.trip.id, 10) % mapImages.length;
+    // Add a fallback in case trip ID is not a valid number
+    const id = this.trip.id || '0';
+    const parsedId = parseInt(id, 10);
+    const index = !isNaN(parsedId) ? parsedId % mapImages.length : 0;
     return mapImages[index];
   }
 }
