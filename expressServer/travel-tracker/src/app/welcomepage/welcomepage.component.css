@@ -1,0 +1,510 @@
+/* Welcome Page - Beautiful Modern Design inspired by trips and tripdetail pages */
+
+/* Main Container */
+.content-wrapper {
+  background: linear-gradient(135deg, #f8fffe 0%, #f0f7f4 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, 
+    rgba(43, 158, 95, 0.95) 0%, 
+    rgba(34, 139, 80, 0.95) 50%, 
+    rgba(79, 179, 115, 0.95) 100%
+  );
+  min-height: 60vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,90.7C672,85,768,107,864,128C960,149,1056,171,1152,165.3C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x bottom;
+  background-size: 1440px 100px;
+  animation: wave 20s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-720px);
+  }
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+  padding: 4rem 1rem;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-section .lead {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 2.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero Buttons */
+.hero-section .btn {
+  border-radius: 50px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  text-transform: none;
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.hero-section .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.hero-section .btn:hover::before {
+  left: 100%;
+}
+
+.hero-section .btn-primary {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  color: #2b9e5f;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+.hero-section .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
+  color: #228b50;
+}
+
+.hero-section .btn-success {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.hero-section .btn-success:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Search Section */
+.hero-section .input-group {
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.hero-section .form-control {
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  font-size: 1.1rem;
+  padding: 1.2rem 2rem;
+  transition: all 0.3s ease;
+}
+
+.hero-section .form-control:focus {
+  background: white;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.hero-section .form-control::placeholder {
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.search-btn {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  color: #2b9e5f;
+  border: none;
+  padding: 1.2rem 2rem;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+.search-btn:hover {
+  transform: translateY(-2px);
+  color: #228b50;
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
+}
+
+/* Auth CTA */
+.auth-cta {
+  animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+.auth-cta .small {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Map Section */
+.map-section {
+  background: linear-gradient(135deg, #f8fffe 0%, #f0f7f4 100%);
+  padding: 6rem 0;
+}
+
+.map-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2b9e5f;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.map-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #2b9e5f, #228b50);
+  border-radius: 2px;
+}
+
+.map-section .map-description {
+  font-size: 1.2rem;
+  color: #6c757d;
+  font-weight: 400;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.map-container {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s ease;
+}
+
+.map-container:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+}
+
+.map-container img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.map-container:hover img {
+  transform: scale(1.05);
+}
+
+.map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(43, 158, 95, 0.85) 0%, 
+    rgba(34, 139, 80, 0.85) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.map-container:hover .map-overlay {
+  opacity: 1;
+}
+
+.map-overlay h3 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.map-overlay .btn, .map-explore-btn {
+  background: rgba(255, 255, 255, 0.95);
+  color: #2b9e5f;
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.map-overlay .btn:hover, .map-explore-btn:hover {
+  background: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Top Places Section */
+.top-travel-trackers {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+  padding: 6rem 0;
+}
+
+.top-travel-trackers h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2b9e5f;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.top-travel-trackers h2::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #2b9e5f, #228b50);
+  border-radius: 2px;
+}
+
+.travel-tracker-row {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding: 1rem 0 2rem;
+  scroll-behavior: smooth;
+}
+
+.travel-tracker-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.travel-tracker-row::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.travel-tracker-row::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #2b9e5f, #228b50);
+  border-radius: 4px;
+}
+
+.travel-tracker-row::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #228b50, #2b9e5f);
+}
+
+/* Travel Tracker Cards */
+.travel-tracker-card {
+  border: none;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.travel-tracker-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(43, 158, 95, 0.1) 0%, rgba(34, 139, 80, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.travel-tracker-card:hover::before {
+  opacity: 1;
+}
+
+.travel-tracker-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.travel-tracker-card .card-img-top {
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.travel-tracker-card:hover .card-img-top {
+  transform: scale(1.1);
+}
+
+.travel-tracker-card .card-body {
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.travel-tracker-card .card-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2b9e5f;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .hero-section h1 {
+    font-size: 2.8rem;
+  }
+  
+  .hero-section .lead {
+    font-size: 1.2rem;
+  }
+  
+  .top-travel-trackers h2, .map-section h2 {
+    font-size: 2rem;
+  }
+  
+  .map-section .map-description {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 50vh;
+  }
+  
+  .hero-section .container {
+    padding: 3rem 1rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hero-section .lead {
+    font-size: 1.1rem;
+  }
+  
+  .hero-section .btn {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .d-flex.gap-3 {
+    flex-direction: column;
+    gap: 1rem !important;
+  }
+  
+  .map-container img {
+    height: 300px;
+  }
+  
+  .map-overlay h3 {
+    font-size: 1.8rem;
+  }
+  
+  .travel-tracker-card {
+    min-width: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section h1 {
+    font-size: 1.9rem;
+  }
+  
+  .hero-section .form-control {
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+  }
+  
+  .search-btn {
+    padding: 1rem 1.5rem;
+  }
+  
+  .map-section {
+    padding: 4rem 0;
+  }
+  
+  .map-section h2 {
+    font-size: 1.8rem;
+  }
+  
+  .map-section .map-description {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .top-travel-trackers {
+    padding: 4rem 0;
+  }
+  
+  .top-travel-trackers h2 {
+    font-size: 1.8rem;
+  }
+  
+  .travel-tracker-card {
+    min-width: 220px;
+  }
+  
+  .travel-tracker-card .card-img-top {
+    height: 180px;
+  }
+}

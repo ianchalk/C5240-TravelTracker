@@ -1,0 +1,199 @@
+<div class="your-trips-container">
+  <div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center trips-header">
+      <div>
+        <h1 class="trips-title">Your Personal Trips</h1>
+        <p class="trips-subtitle">Manage your travel memories - both public and private</p>
+      </div>
+      <div class="header-buttons">
+        <button 
+          class="btn btn-outline-primary me-2" 
+          (click)="goToPublicTrips()">
+          <i class="fas fa-globe me-2"></i> 
+          View Public Trips
+        </button>
+        <button 
+          class="btn btn-success" 
+          (click)="goToAddTrip()">
+          <i class="fas fa-plus me-2"></i> 
+          Add New Trip
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="row g-4 stats-bar">
+      <div class="col-lg-3 col-md-6">
+        <div class="card stats-card text-center h-100">
+          <div class="card-body">
+            <i class="fas fa-map-marked-alt stats-icon"></i>
+            <h6 class="stats-title">Total Trips</h6>
+            <div class="stats-value">{{trips.length || 0}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card stats-card text-center h-100">
+          <div class="card-body">
+            <i class="fas fa-globe stats-icon text-success"></i>
+            <h6 class="stats-title">Public Trips</h6>
+            <div class="stats-value">{{publicTrips.length || 0}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card stats-card text-center h-100">
+          <div class="card-body">
+            <i class="fas fa-lock stats-icon text-warning"></i>
+            <h6 class="stats-title">Private Trips</h6>
+            <div class="stats-value">{{privateTrips.length || 0}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card stats-card text-center h-100">
+          <div class="card-body">
+            <i class="fas fa-dollar-sign stats-icon"></i>
+            <h6 class="stats-title">Total Spent</h6>
+            <div class="stats-value">${{totalAmountSpent.toFixed(2)}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading your trips...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading your trips...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="alert alert-danger text-center">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>Unable to load your trips.</strong> Please try again later or contact support if the problem persists.
+    </div>
+
+    <!-- No Authentication -->
+    <div *ngIf="!isAuthenticated && !loading" class="alert alert-info text-center">
+      <i class="fas fa-info-circle me-2"></i>
+      <strong>Please sign in to view your trips.</strong>
+    </div>
+
+    <!-- No Trips -->
+    <div *ngIf="!loading && !error && isAuthenticated && trips.length === 0" class="text-center py-5">
+      <div class="empty-state">
+        <i class="fas fa-suitcase-rolling empty-icon"></i>
+        <h3 class="empty-title">No trips yet!</h3>
+        <p class="empty-text">Start your travel journey by adding your first trip.</p>
+        <button class="btn btn-primary btn-lg" (click)="goToAddTrip()">
+          <i class="fas fa-plus me-2"></i>
+          Add Your First Trip
+        </button>
+      </div>
+    </div>
+
+    <!-- Public Trips Section -->
+    <div *ngIf="!loading && !error && publicTrips.length > 0" class="trips-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-globe text-success me-2"></i>
+          Public Trips ({{publicTrips.length}})
+        </h2>
+        <p class="section-subtitle">These trips are visible to everyone</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6" *ngFor="let trip of publicTrips">
+          <div class="card trip-card h-100">
+            <div class="trip-image-container">
+              <img [src]="trip.image" [alt]="trip.name" class="card-img-top trip-image" (click)="goToTripDetail(trip)">
+              <div class="trip-badge public-badge">
+                <i class="fas fa-globe"></i> Public
+              </div>
+              <div class="trip-actions">
+                <button class="btn btn-warning btn-sm" (click)="toggleTripPrivacy(trip)" title="Make Private">
+                  <i class="fas fa-lock"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteTrip(trip)" title="Delete Trip">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">            <h5 class="card-title trip-name" (click)="goToTripDetail(trip)">{{trip.name}}</h5>
+              <p class="card-text trip-location">
+              
+                {{trip.location}}
+              </p>
+              <div class="trip-footer">
+                <span class="trip-cost">
+                  <i class="fas fa-dollar-sign me-1"></i>
+                  {{getTripDisplayCost(trip).toFixed(2)}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Private Trips Section -->
+    <div *ngIf="!loading && !error && privateTrips.length > 0" class="trips-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-lock text-warning me-2"></i>
+          Private Trips ({{privateTrips.length}})
+        </h2>
+        <p class="section-subtitle">These trips are only visible to you</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6" *ngFor="let trip of privateTrips">
+          <div class="card trip-card h-100">
+            <div class="trip-image-container">
+              <img [src]="trip.image" [alt]="trip.name" class="card-img-top trip-image" (click)="goToTripDetail(trip)">
+              <div class="trip-badge private-badge">
+                <i class="fas fa-lock"></i> Private
+              </div>
+              <div class="trip-actions">
+                <button class="btn btn-success btn-sm" (click)="toggleTripPrivacy(trip)" title="Make Public">
+                  <i class="fas fa-globe"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteTrip(trip)" title="Delete Trip">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">            <h5 class="card-title trip-name" (click)="goToTripDetail(trip)">{{trip.name}}</h5>
+              <p class="card-text trip-location">
+               
+                {{trip.location}}
+              </p>
+              <div class="trip-footer">
+                <span class="trip-cost">
+                  <i class="fas fa-dollar-sign me-1"></i>
+                  {{getTripDisplayCost(trip).toFixed(2)}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Public Trips Message -->
+    <div *ngIf="!loading && !error && trips.length > 0 && publicTrips.length === 0" class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      You don't have any public trips yet. Make some of your trips public to share them with others!
+    </div>
+
+    <!-- No Private Trips Message -->
+    <div *ngIf="!loading && !error && trips.length > 0 && privateTrips.length === 0" class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      All your trips are currently public. You can make them private if you want to keep them personal.
+    </div>
+
+  </div>
+</div>

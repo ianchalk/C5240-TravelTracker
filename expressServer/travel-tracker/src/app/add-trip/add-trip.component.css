@@ -287,3 +287,27 @@ input[type="file"]:focus {
   transform: none;
   box-shadow: none;
 }
+
+/* Google Places Autocomplete Styles */
+.autocomplete-dropdown {
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-item {
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background-color: #f8f9fa;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.position-relative {
+  position: relative;
+}

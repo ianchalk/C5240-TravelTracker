@@ -12,6 +12,18 @@
         </button>
       </div>
 
+      <!-- User Information Display -->
+      <div *ngIf="isAuthenticated && currentUser" class="alert alert-info mb-4">
+        <i class="fas fa-user-circle me-2"></i>
+        Creating trip as: <strong>{{ currentUser.name }}</strong> ({{ currentUser.email }})
+      </div>
+
+      <!-- Authentication Warning -->
+      <div *ngIf="!isAuthenticated" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Authentication Required:</strong> You must be signed in to add a new trip. Redirecting you back to the trips page...
+      </div>
+
       <!-- Success Message -->
       <div *ngIf="submitSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle me-2"></i>
@@ -26,7 +38,11 @@
       </div>
 
       <!-- Main Form -->
-      <form [formGroup]="addTripForm" (ngSubmit)="onSubmit()" novalidate>
+      <form 
+        [formGroup]="addTripForm" 
+        (ngSubmit)="onSubmit()" 
+        novalidate
+        *ngIf="isAuthenticated">
         
         <!-- Trip Information Card -->
         <div class="card shadow-sm mb-4">
@@ -141,15 +157,57 @@
                   <!-- Address -->
                   <div class="col-md-6 mb-3">
                     <label [for]="'placeAddress' + i" class="form-label fw-bold">Address *</label>
-                    <input 
-                      type="text" 
-                      [id]="'placeAddress' + i"
-                      class="form-control"
-                      [class.is-invalid]="isPlaceFieldInvalid(i, 'address')"
-                      formControlName="address" 
-                      placeholder="Full address">
+                    <div class="position-relative">
+                      <input 
+                        type="text" 
+                        [id]="'placeAddress' + i"
+                        class="form-control"
+                        [class.is-invalid]="isPlaceFieldInvalid(i, 'address')"
+                        formControlName="address" 
+                        placeholder="Start typing an address..."
+                        (input)="onAddressInput($event, i)"
+                        (focus)="onAddressFocus(i)"
+                        (blur)="onAddressBlur(i)"
+                        (keydown)="onAddressKeydown($event, i)"
+                        autocomplete="off">
+                      
+                      <!-- Autocomplete Dropdown -->
+                      <div 
+                        *ngIf="showAutocomplete[i] && addressPredictions[i]?.length > 0" 
+                        class="autocomplete-dropdown position-absolute w-100 bg-white border border-top-0 shadow-sm"
+                        style="z-index: 1050; max-height: 300px; overflow-y: auto;">
+                        <div 
+                          *ngFor="let prediction of addressPredictions[i]; let predIndex = index"
+                          class="autocomplete-item p-3 border-bottom cursor-pointer"
+                          [class.active]="predIndex === selectedPredictionIndex[i]"
+                          (mousedown)="selectPrediction(i, prediction)"
+                          (mouseenter)="selectedPredictionIndex[i] = predIndex"
+                          style="cursor: pointer;">
+                          <div class="fw-bold text-dark">{{ prediction.structured_formatting.main_text }}</div>
+                          <div class="text-muted small">{{ prediction.structured_formatting.secondary_text }}</div>
+                        </div>
+                      </div>
+                      
+                      <!-- Loading indicator -->
+                      <div 
+                        *ngIf="isLoadingPredictions[i]" 
+                        class="position-absolute end-0 top-50 translate-middle-y me-2">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div *ngIf="isPlaceFieldInvalid(i, 'address')" class="invalid-feedback">
                       {{ getPlaceFieldError(i, 'address') }}
+                    </div>
+                    
+                    <!-- Selected address preview -->
+                    <div *ngIf="selectedAddresses[i]" class="mt-2">
+                      <div class="alert alert-success py-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <strong>Selected:</strong> {{ selectedAddresses[i].formatted_address }}
+                      </div>
                     </div>
                   </div>
 

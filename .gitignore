@@ -152,3 +152,9 @@ e2e/
 node_modules/
 docs/
 Db
+
+.env
+.vscode/
+
+expressServer/.env
+expressServer/.env
