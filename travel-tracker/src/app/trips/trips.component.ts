@@ -120,7 +120,7 @@ export class TripsComponent implements OnInit, OnDestroy {
         
         // Try direct HTTP call as fallback
         console.log("=== TRYING DIRECT HTTP FALLBACK ===");
-        this.http.get<any[]>('http://localhost:8080/trip').subscribe({
+        this.http.get<any[]>('https://traveltracker2025.azurewebsites.net/trip').subscribe({
           next: (directResult) => {
             console.log("=== DIRECT HTTP SUCCESS (PUBLIC TRIPS) ===");
             console.log("Direct HTTP call success:", directResult);
@@ -313,7 +313,7 @@ export class TripsComponent implements OnInit, OnDestroy {
   // Add a manual test method
   testApiDirect() {
     console.log("Testing direct API call...");
-    this.http.get<any[]>('http://localhost:8080/trip').subscribe({
+    this.http.get<any[]>('https://traveltracker2025.azurewebsites.net/trip').subscribe({
       next: (result) => {
         console.log("Direct API test SUCCESS:", result);
         alert("Direct API test successful! Got " + result.length + " trips");

@@ -42,7 +42,7 @@ var _a = require('../model/UserModel'), UserModel = _a.UserModel, generateUserId
 // Configure Google OAuth strategy
 var googleClientId = process.env.GOOGLE_CLIENT_ID;
 var googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-var callbackURL = process.env.CALLBACK_URL || "http://localhost:8080/auth/google/callback";
+var callbackURL = process.env.CALLBACK_URL || "https://traveltracker2025.azurewebsites.net/auth/google/callback";
 if (!googleClientId || !googleClientSecret) {
     console.error('❌ Google OAuth credentials not found in environment variables!');
     console.error('Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env file');

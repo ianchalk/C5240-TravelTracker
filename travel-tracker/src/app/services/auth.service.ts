@@ -21,7 +21,7 @@ interface AuthStatus {
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/auth';
+  private baseUrl = 'https://traveltracker2025.azurewebsites.net/auth';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 

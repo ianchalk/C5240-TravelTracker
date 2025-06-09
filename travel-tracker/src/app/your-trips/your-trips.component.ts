@@ -105,7 +105,7 @@ export class YourTripsComponent implements OnInit, OnDestroy {
     console.log("Current user ID:", this.currentUser._id);
     
     // Call the new user-specific endpoint
-    this.http.get<any[]>(`http://localhost:8080/trip/user/${this.currentUser._id}`).subscribe({
+    this.http.get<any[]>(`https://traveltracker2025.azurewebsites.net/trip/user/${this.currentUser._id}`).subscribe({
       next: (result: any[]) => {
         console.log("=== USER TRIPS SUCCESS ===");
         console.log("User trips response:", result);
@@ -261,7 +261,7 @@ export class YourTripsComponent implements OnInit, OnDestroy {
       userId: this.currentUser._id // Include userId for security check
     };
     
-    this.http.patch(`http://localhost:8080/trip/${tripId}/privacy`, updateData).subscribe({
+    this.http.patch(`https://traveltracker2025.azurewebsites.net/trip/${tripId}/privacy`, updateData).subscribe({
       next: (response: any) => {
         console.log("Privacy updated successfully:", response);
         
@@ -294,7 +294,7 @@ export class YourTripsComponent implements OnInit, OnDestroy {
       const tripId = trip.tripId || trip.id;
       
       // Call the backend API to delete the trip
-      this.http.delete(`http://localhost:8080/trip/${tripId}`).subscribe({
+      this.http.delete(`https://traveltracker2025.azurewebsites.net/trip/${tripId}`).subscribe({
         next: (response: any) => {
           console.log("Trip deleted successfully:", response);
           

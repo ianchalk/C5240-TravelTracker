@@ -20,8 +20,8 @@ class AuthRouter {
     // Google OAuth callback route
     this.router.get('/google/callback', 
       passport.authenticate('google', { 
-        successRedirect: 'http://localhost:4200/#/',  // Redirect to Angular welcome page on success
-        failureRedirect: 'http://localhost:4200/#/'   // Redirect to Angular home page on failure
+        successRedirect: 'https://traveltracker2025.azurewebsites.net/',  // Redirect to Angular welcome page on success
+        failureRedirect: 'https://traveltracker2025.azurewebsites.net/'   // Redirect to Angular home page on failure
       })
     );
 
@@ -32,7 +32,7 @@ class AuthRouter {
           console.error('Error during logout:', err);
           return res.status(500).json({ error: 'Logout failed' });
         }
-        res.redirect('http://localhost:4200/#/');  // Redirect to Angular home page
+        res.redirect('https://traveltracker2025.azurewebsites.net/');  // Redirect to Angular home page
       });
     });
 
