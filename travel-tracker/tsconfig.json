@@ -18,7 +18,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "types": ["google.maps"],
+    "types": ["google.maps", "jasmine", "node"],
     "typeRoots": ["node_modules/@types", "src/types"],
     "allowSyntheticDefaultImports": true
   },
