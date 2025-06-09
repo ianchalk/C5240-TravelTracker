@@ -7,81 +7,257 @@
       Back to Trips
     </button>
     
-    <h1 class="trip-title">{{ trip.name }}</h1>
+    <!-- Loading indicator -->
+    <div class="text-center my-5" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading trip details...</p>
+    </div>
     
-    <div class="trip-meta">
-      <div>
-        <span class="trip-meta-label">Start Date</span>
-        <span class="trip-meta-value">{{ trip.date | date:'mediumDate' }}</span>
+    <!-- Error message -->
+    <div class="alert alert-warning" *ngIf="error">
+      <p>Failed to load trip details from server.</p>
+    </div>
+    
+    <h1 class="trip-title" *ngIf="!loading">{{ trip.name }}</h1>
+
+    <!-- Permission indicator -->
+    <div class="permission-indicator" *ngIf="!loading && !error">
+      <div class="permission-badge" [class.read-only]="!canEdit" [class.editable]="canEdit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" *ngIf="canEdit">
+          <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 2.50023C18.8978 2.10243 19.4374 1.87891 20 1.87891C20.5626 1.87891 21.1022 2.10243 21.5 2.50023C21.8978 2.89804 22.1213 3.43762 22.1213 4.00023C22.1213 4.56284 21.8978 5.10243 21.5 5.50023L12 15.0002L8 16.0002L9 12.0002L18.5 2.50023Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" *ngIf="!canEdit">
+          <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5S21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12S9.24 7 12 7S17 9.24 17 12S14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12S10.34 15 12 15S15 13.66 15 12S13.66 9 12 9Z" fill="currentColor"/>
+        </svg>
+        <span *ngIf="canEdit">Editable</span>
+        <span *ngIf="!canEdit">View Only</span>
       </div>
-      <div>
-        <span class="trip-meta-label">End Date</span>
-        <span class="trip-meta-value">{{ trip.endDate | date:'mediumDate' }}</span>
+    </div>
+
+    
+    <div class="trip-meta" *ngIf="!loading && !error">
+      <div class="meta-card">
+        <div class="meta-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.6947 13.7002H15.7037M15.6947 16.7002H15.7037M11.9955 13.7002H12.0045M11.9955 16.7002H12.0045M8.29431 13.7002H8.30329M8.29431 16.7002H8.30329" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="meta-content">
+          <span class="trip-meta-label">Start Date</span>
+          <span class="trip-meta-value">{{ getCalculatedStartDate() | date:'mediumDate' }}</span>
+          <!-- Debug: Raw value = {{ getCalculatedStartDate() }} -->
+        </div>
       </div>
-      <div>
-        <span class="trip-meta-label">Duration</span>
-        <span class="trip-meta-value">{{ calculateDuration() }} days</span>
+      
+      <div class="meta-card">
+        <div class="meta-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="meta-content">
+          <span class="trip-meta-label">End Dates</span>
+          <span class="trip-meta-value">{{ getCalculatedEndDate() | date:'mediumDate' }}</span>
+          <!-- Debug: Raw value = {{ getCalculatedEndDate() }} -->
+        </div>
       </div>
-      <div>
-        <span class="trip-meta-label">Budget</span>
-        <span class="trip-meta-value">${{ trip.amountSpent | number:'1.0-0' }}</span>
+      
+      <div class="meta-card">
+        <div class="meta-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="meta-content">
+          <span class="trip-meta-label">Duration</span>
+          <span class="trip-meta-value">{{ calculateDurationFromPlaces() }} days</span>
+        </div>
+      </div>
+      
+      <div class="meta-card">
+        <div class="meta-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M17 9V7C17 5.89543 16.1046 5 15 5H9C7.89543 5 7 5.89543 7 7V9M7 9C5.89543 9 5 9.89543 5 11V18C5 19.1046 5.89543 20 7 20H17C18.1046 20 19 19.1046 19 18V11C19 9.89543 18.1046 9 17 9M7 9H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="13" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="meta-content">
+          <span class="trip-meta-label">Budget Spent</span>
+          <span class="trip-meta-value">${{ getCalculatedTotalBudget() | number:'1.0-0' }}</span>
+        </div>
       </div>
     </div>
     
-    <div class="places-carousel-container">
+
+    
+    <!-- No places message -->
+    <div class="alert alert-info" *ngIf="!loading && !error && trip.places.length === 0">
+      <p>No places found for this trip. Add a new place to get started!</p>
+    </div>
+    
+    <div class="places-carousel-container" *ngIf="!loading && !error && trip.places.length > 0">
+      <div class="carousel-header">
+        <h3 class="carousel-title">📍 Trip Destinations</h3>
+        <p class="carousel-subtitle">Explore your journey, one place at a time</p>
+      </div>
+      
       <div class="places-carousel">
         <div *ngFor="let place of trip.places; let i = index" 
              [class.selected]="i === selectedPlaceIndex" 
              (click)="selectPlace(i)" 
              class="place-card">
           <div class="place-name">{{ place.name }}</div>
+          
+        
+          <div class="place-dates" *ngIf="place.startDate || place.endDate"> 
+            <span *ngIf="place.startDate">{{ place.startDate | date:'shortDate' }}</span>
+            <span *ngIf="place.endDate"> - {{ place.endDate | date:'shortDate' }}</span>
+          </div>
+          
+          <div class="place-cost" *ngIf="place.cost">
+            <span class="cost-label">Cost:</span>
+            <span class="cost-value">${{ place.cost | number:'1.0-0' }}</span>
+          </div>
+          
           <div class="place-pics">
-            {{ place.pictures.length }} photo{{ place.pictures.length > 1 ? 's' : '' }}
+          {{ place.pictures.length }} photo{{ place.pictures.length > 1 ? 's' : '' }}
           </div>
         </div>
       </div>
       
-      <div class="carousel-dots">
+      <div class="carousel-dots" *ngIf="trip.places.length > 1">
         <span *ngFor="let place of trip.places; let i = index" 
               class="dot"
-              [class.active-dot]="i === selectedPlaceIndex"></span>
+              [class.active-dot]="i === selectedPlaceIndex"
+              (click)="selectPlace(i)"></span>
       </div>
     </div>
     
-    <div class="tripdetail-main">
+    <div class="tripdetail-main" *ngIf="!loading && !error && trip.places.length > 0">
       <div class="place-notes">
-        <div class="place-actions">
-          <button class="add-place-btn">+ Add Place</button>
-          <button class="delete-place-btn">Delete Place</button>
+        <div class="place-actions" *ngIf="canEdit">
+          <button class="add-place-btn" (click)="navigateToAddPlace()">Add Place</button>
+          <button class="delete-place-btn" (click)="deleteCurrentPlace()">Delete Place</button>
         </div>
         
         <div class="notes-box">
           <h3 style="margin-top: 0; color: #333; margin-bottom: 16px;">
-            About {{ trip.places[selectedPlaceIndex].name }}
+            About {{ trip.places[selectedPlaceIndex] ? trip.places[selectedPlaceIndex].name : 'This Place' }}
           </h3>
-          {{ trip.places[selectedPlaceIndex].notes }}
+                  
+          <div class="place-notes-content">
+            <!-- <h4 class="notes-title" style="margin-top: 16px;">Notes</h4> -->
+            {{ trip.places[selectedPlaceIndex] ? trip.places[selectedPlaceIndex].notes : 'No notes available for this place.' }}
+          </div>
         </div>
       </div>
       
-      <div class="place-pictures">
-        <h3 class="pictures-title">Photos</h3>
-        <div class="pictures-grid">
-          <div *ngFor="let pic of trip.places[selectedPlaceIndex].pictures.slice(0, 4); let j = index" 
-               class="picture-thumb">
-            <img [src]="pic" alt="{{ trip.places[selectedPlaceIndex].name }} photo {{j+1}}" />
+      <div class="place-pictures" *ngIf="trip.places[selectedPlaceIndex]">
+        <div class="pictures-header">
+          <h3 class="pictures-title">
+            <svg class="pictures-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="currentColor"/>
+            </svg>
+            Photo Gallery
+          </h3>
+          <div class="pictures-count">
+            <span class="count-badge">{{ trip.places[selectedPlaceIndex].pictures.length || 0 }}</span>
+            <span class="count-text">{{ (trip.places[selectedPlaceIndex].pictures.length === 1) ? 'photo' : 'photos' }}</span>
+          </div>
+        </div>
+        
+        <!-- Show this when there are photos -->
+        <div class="pictures-grid" [class.expanded]="isPhotoGalleryExpanded" *ngIf="trip.places[selectedPlaceIndex].pictures && trip.places[selectedPlaceIndex].pictures.length > 0">
+          <div *ngFor="let pic of (isPhotoGalleryExpanded ? trip.places[selectedPlaceIndex].pictures : trip.places[selectedPlaceIndex].pictures.slice(0, 4)); let j = index" 
+               class="picture-thumb"
+               [class.featured]="j === 0 && !isPhotoGalleryExpanded"
+               [class.has-overlay]="!isPhotoGalleryExpanded && trip.places[selectedPlaceIndex].pictures.length > 4 && j === 3">
+            <div class="picture-container">
+              <img [src]="pic" 
+                   [alt]="(trip.places[selectedPlaceIndex].name || 'Place') + ' photo ' + (j+1)" 
+                   onerror="this.src='https://via.placeholder.com/300x200/f8f9fa/6c757d?text=No+Image'"
+                   class="picture-image" />
+              <div class="picture-overlay" *ngIf="!isPhotoGalleryExpanded && trip.places[selectedPlaceIndex].pictures.length > 4 && j === 3">
+                <span class="overlay-text">+{{ trip.places[selectedPlaceIndex].pictures.length - 4 }} more</span>
+              </div>
+              <div class="picture-gradient"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Show this when there are no photos -->
+        <div class="empty-photos-container" *ngIf="!trip.places[selectedPlaceIndex].pictures || trip.places[selectedPlaceIndex].pictures.length === 0">
+          <div class="empty-photos-message">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#e9ecef"/>
+            </svg>
+            <p>No photos yet.</p>
+            <p>Add photos to showcase this destination!</p>
           </div>
         </div>
         
         <div class="pictures-actions">
-          <button class="view-all-btn">View All</button>
-          <button class="add-pictures-btn">+ Add Photos</button>
+          <button class="view-all-btn" 
+                  [class.disabled-btn]="!trip.places[selectedPlaceIndex].pictures || trip.places[selectedPlaceIndex].pictures.length === 0"
+                  (click)="togglePhotoGallery()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5S21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12S9.24 7 12 7S17 9.24 17 12S14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12S10.34 15 12 15S15 13.66 15 12S13.66 9 12 9Z" fill="currentColor"/>
+            </svg>
+            {{ isPhotoGalleryExpanded ? 'Show Less' : 'View All Photos' }}
+          </button>
+          <button class="add-pictures-btn" *ngIf="canEdit" (click)="openFileInput()" [disabled]="isUploadingPhotos">
+            <div *ngIf="isUploadingPhotos" class="spinner-container">
+              <div class="spinner"></div>
+            </div>
+            <svg *ngIf="!isUploadingPhotos" width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C13.1 2 14 2.9 14 4V10H20C21.1 10 22 10.9 22 12S21.1 14 20 14H14V20C14 21.1 13.1 22 12 22S10 21.1 10 20V14H4C2.9 14 2 13.1 2 12S2.9 10 4 10H10V4C10 2.9 10.9 2 12 2Z" fill="currentColor"/>
+            </svg>
+            {{ isUploadingPhotos ? 'Uploading...' : 'Add Photos' }}
+          </button>
         </div>
       </div>
     </div>
-    
-    <div class="map-section">
-      <h2 class="map-section-title">Trip Map</h2>
-      <img [src]="getMapImage()" alt="Map of {{ trip.name }}" class="map-img" />
+
+    <div class="map-section-container" *ngIf="!loading && !error && trip.places.length > 0">
+      <div class="map-section-header">
+        <h3 class="map-section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 12.75C13.6569 12.75 15 11.4069 15 9.75C15 8.09315 13.6569 6.75 12 6.75C10.3431 6.75 9 8.09315 9 9.75C9 11.4069 10.3431 12.75 12 12.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.5 9.75C19.5 16.5 12 21.75 12 21.75C12 21.75 4.5 16.5 4.5 9.75C4.5 7.76088 5.29018 5.85322 6.6967 4.4467C8.10322 3.04018 10.0109 2.25 12 2.25C13.9891 2.25 15.8968 3.04018 17.3033 4.4467C18.7098 5.85322 19.5 7.76088 19.5 9.75V9.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Trip Map
+        </h3>
+        <p class="map-section-subtitle">Explore all destinations for this journey</p>
+      </div>
+      <div class="map-section">
+        <app-interactive-map 
+          [places]="trip.places"
+          [tripName]="trip.name"
+          [mapHeight]="450"
+          [apiKey]="googleMapsApiKey"
+          [selectedPlaceIndex]="selectedPlaceIndex">
+        </app-interactive-map>
+      </div>
     </div>
   </div>
+
+    <!-- Trip Delete -->
+  <div class="trip-actions" *ngIf="!loading && !error && canEdit">
+    <button class="delete-trip-btn" (click)="deleteTrip()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px">
+        <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Delete Trip
+    </button>
+  </div>
 </div>
+

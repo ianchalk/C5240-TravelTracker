@@ -1,24 +1,26 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { WelcomepageComponent } from './welcomepage/welcomepage.component';
-import { TripsComponent } from './trips/trips.component';
-import { TripDetailComponent } from './tripdetail/tripdetail.component';
+import { TripproxyService } from './tripproxy.service';
+import { SearchResultsComponent } from './search-results/search-results.component';
 
+// This module is only needed for backwards compatibility
+// The application is now using standalone components approach
 @NgModule({
   declarations: [
-    // Only non-standalone components here
+    SearchResultsComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    TripsComponent,
-    WelcomepageComponent,
-    TripDetailComponent
+    HttpClientModule,
+    AppRoutingModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    TripproxyService
+  ],
+  bootstrap: []
 })
 export class AppModule { }

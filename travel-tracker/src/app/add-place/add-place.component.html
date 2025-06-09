@@ -1,0 +1,251 @@
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0 text-primary">
+          <i class="fas fa-plus-circle me-2"></i>Add New Place
+        </h2>
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+          <i class="fas fa-times me-2"></i>Cancel
+        </button>
+      </div>
+
+      <!-- Trip Context -->
+      <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Adding place to: <strong>{{ tripName || 'Loading...' }}</strong>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="submitSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <strong>Success!</strong> Your place has been added successfully. Returning to trip details...
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="submitError" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong>Error:</strong> {{ submitError }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="submitError = ''"></button>
+      </div>
+
+      <!-- Main Form -->
+      <form [formGroup]="addPlaceForm" (ngSubmit)="onSubmit()" novalidate>
+        
+        <!-- Place Information Card -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+              <i class="fas fa-map-marker-alt me-2"></i>Place Information
+            </h5>
+          </div>
+          <div class="card-body">
+            
+            <div class="row">
+              
+              <!-- Place Name -->
+              <div class="col-md-6 mb-3">
+                <label for="placeName" class="form-label fw-bold">Place Name *</label>
+                <input 
+                  type="text" 
+                  id="placeName"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('name')"
+                  formControlName="name" 
+                  placeholder="e.g., Eiffel Tower">
+                <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                  {{ getFieldError('name') }}
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div class="col-md-6 mb-3">
+                <label for="placeAddress" class="form-label fw-bold">Address *</label>
+                <div class="position-relative">
+                  <input 
+                    type="text" 
+                    id="placeAddress"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('address')"
+                    formControlName="address" 
+                    placeholder="Start typing an address..."
+                    (input)="onAddressInput($event)"
+                    (focus)="onAddressFocus()"
+                    (blur)="onAddressBlur()"
+                    (keydown)="onAddressKeydown($event)"
+                    autocomplete="off">
+                  
+                  <!-- Autocomplete Dropdown -->
+                  <div 
+                    *ngIf="showAutocomplete && addressPredictions.length > 0" 
+                    class="autocomplete-dropdown position-absolute w-100 bg-white border border-top-0 shadow-sm"
+                    style="z-index: 1050; max-height: 300px; overflow-y: auto;">
+                    <div 
+                      *ngFor="let prediction of addressPredictions; let i = index"
+                      class="autocomplete-item p-3 border-bottom cursor-pointer"
+                      [class.active]="i === selectedPredictionIndex"
+                      (mousedown)="selectPrediction(prediction)"
+                      (mouseenter)="selectedPredictionIndex = i"
+                      style="cursor: pointer;">
+                      <div class="fw-bold text-dark">{{ prediction.structured_formatting.main_text }}</div>
+                      <div class="text-muted small">{{ prediction.structured_formatting.secondary_text }}</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Loading indicator -->
+                  <div 
+                    *ngIf="isLoadingPredictions" 
+                    class="position-absolute end-0 top-50 translate-middle-y me-2">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div *ngIf="isFieldInvalid('address')" class="invalid-feedback">
+                  {{ getFieldError('address') }}
+                </div>
+                
+                <!-- Selected address preview -->
+                <div *ngIf="selectedAddress" class="mt-2">
+                  <div class="alert alert-success py-2">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <strong>Selected:</strong> {{ selectedAddress.formatted_address }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Start Date -->
+              <div class="col-md-4 mb-3">
+                <label for="startDate" class="form-label fw-bold">Start Date *</label>
+                <input 
+                  type="date" 
+                  id="startDate"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('startDate')"
+                  formControlName="startDate">
+                <div *ngIf="isFieldInvalid('startDate')" class="invalid-feedback">
+                  {{ getFieldError('startDate') }}
+                </div>
+              </div>
+
+              <!-- End Date -->
+              <div class="col-md-4 mb-3">
+                <label for="endDate" class="form-label fw-bold">End Date *</label>
+                <input 
+                  type="date" 
+                  id="endDate"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('endDate')"
+                  formControlName="endDate">
+                <div *ngIf="isFieldInvalid('endDate')" class="invalid-feedback">
+                  {{ getFieldError('endDate') }}
+                </div>
+              </div>
+
+              <!-- Duration Display -->
+              <div class="col-md-4 mb-3">
+                <label class="form-label fw-bold">Duration</label>
+                <div class="form-control-plaintext fw-bold text-primary">
+                  <i class="fas fa-calendar-day me-2"></i>
+                  {{ getDurationDisplay() || 'Select dates' }}
+                </div>
+              </div>
+
+              <!-- Cost -->
+              <div class="col-md-6 mb-3">
+                <label for="cost" class="form-label fw-bold">Cost (Optional)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input 
+                    type="number" 
+                    id="cost"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('cost')"
+                    formControlName="cost" 
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00">
+                </div>
+                <div *ngIf="isFieldInvalid('cost')" class="invalid-feedback">
+                  {{ getFieldError('cost') }}
+                </div>
+              </div>
+
+              <!-- Photos -->
+              <div class="col-md-6 mb-3">
+                <label for="photos" class="form-label fw-bold">Photos (Optional)</label>
+                <input 
+                  type="file" 
+                  id="photos"
+                  class="form-control"
+                  multiple
+                  accept="image/*"
+                  (change)="onFileSelect($event)">
+                <small class="form-text text-muted">Select multiple images</small>
+                
+                <!-- Selected Photos Display -->
+                <div *ngIf="addPlaceForm.get('photos')?.value?.length > 0" class="mt-2">
+                  <div class="d-flex flex-wrap gap-2">
+                    <div 
+                      *ngFor="let photo of addPlaceForm.get('photos')?.value; let photoIndex = index"
+                      class="badge bg-secondary d-flex align-items-center">
+                      <i class="fas fa-image me-1"></i>
+                      {{ getPhotoName(photo) }}
+                      <button 
+                        type="button" 
+                        class="btn-close btn-close-white ms-2"
+                        style="font-size: 0.7em;"
+                        (click)="removePhoto(photoIndex)"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="col-12 mb-3">
+                <label for="placeDescription" class="form-label fw-bold">Description *</label>
+                <textarea 
+                  id="placeDescription"
+                  class="form-control" 
+                  rows="3"
+                  [class.is-invalid]="isFieldInvalid('description')"
+                  formControlName="description" 
+                  placeholder="What will you do here? Describe the activities, attractions, or experiences..."></textarea>
+                <div *ngIf="isFieldInvalid('description')" class="invalid-feedback">
+                  {{ getFieldError('description') }}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="card shadow-sm">
+          <div class="card-body d-flex justify-content-between">
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary btn-lg"
+              (click)="onCancel()">
+              <i class="fas fa-arrow-left me-2"></i>Back to Trip
+            </button>
+            
+            <button 
+              type="submit" 
+              class="btn btn-success btn-lg"
+              [disabled]="isSubmitting || addPlaceForm.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i *ngIf="!isSubmitting" class="fas fa-plus me-2"></i>
+              {{ isSubmitting ? 'Adding Place...' : 'Add Place' }}
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

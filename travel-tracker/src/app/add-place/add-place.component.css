@@ -1,0 +1,317 @@
+/* Add Place Component Styles */
+
+.container-fluid {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Form Styling */
+.form-label {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  transform: translateY(-1px);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.form-control.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Button Styling */
+.btn {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #28a745, #1e7e34);
+  border: none;
+}
+
+.btn-outline-secondary:hover {
+  background: linear-gradient(45deg, #6c757d, #545b62);
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* Input Group Styling */
+.input-group-text {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px 0 0 8px;
+  font-weight: 600;
+}
+
+/* Alert Styling */
+.alert {
+  border-radius: 10px;
+  border: none;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-success {
+  background: linear-gradient(45deg, #d4edda, #c3e6cb);
+  color: #155724;
+}
+
+.alert-danger {
+  background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+}
+
+.alert-info {
+  background: linear-gradient(45deg, #d1ecf1, #bee5eb);
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+/* Form Control Plain Text */
+.form-control-plaintext {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  border: 2px solid #e9ecef;
+}
+
+/* Badge Styling */
+.badge {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* Spinner Styling */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Header Styling */
+h2 {
+  font-weight: 700;
+  color: #343a40;
+}
+
+h5 {
+  font-weight: 600;
+}
+
+/* Icon Styling */
+.fas {
+  color: inherit;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .col-md-4, .col-md-6 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* File Input Styling */
+input[type="file"] {
+  border: 2px dashed #6c757d;
+  background: #f8f9fa;
+}
+
+input[type="file"]:focus {
+  border-color: #28a745;
+  background: #fff;
+}
+
+/* Validation Styling */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Duration Display Styling */
+.text-primary {
+  color: #28a745 !important;
+}
+
+/* Animation for form appearance */
+.card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus styling for accessibility */
+.btn:focus,
+.form-control:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+}
+
+/* Loading state styling */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Special styling for place form */
+.place-form-container {
+  background: #ffffff;
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Photo badge styling */
+.badge.bg-secondary {
+  background: linear-gradient(45deg, #6c757d, #545b62) !important;
+}
+
+/* Form text styling */
+.form-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+/* Button group styling for actions */
+.card-body .d-flex.justify-content-between {
+  gap: 1rem;
+}
+
+@media (max-width: 576px) {
+  .card-body .d-flex.justify-content-between {
+    flex-direction: column;
+  }
+  
+  .btn-lg {
+    width: 100%;
+  }
+}
+
+/* Google Places Autocomplete Styles */
+.autocomplete-dropdown {
+  border-radius: 0 0 8px 8px;
+  border-top: none !important;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background-color: #f8f9fa;
+  border-left: 3px solid #28a745;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.autocomplete-item .fw-bold {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.autocomplete-item .text-muted {
+  color: #6c757d !important;
+  font-size: 0.85rem;
+}
+
+/* Loading states */
+.position-relative .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Selected address preview */
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-color: rgba(40, 167, 69, 0.2);
+  color: #155724;
+  border-radius: 6px;
+}

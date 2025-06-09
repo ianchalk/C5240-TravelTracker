@@ -1,24 +1,156 @@
-<!-- Header/Navbar -->
-<header class="fixed-top">
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand" routerLink="/">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPy6uAkukRjKiYvXVvm9Cgpl2akkoO_qLjGA&s" alt="Travel Tracker logo" height="30">
+<!-- AllTrails-Inspired Header -->
+<header class="modern-header">
+  <div class="header-container">
+    <!-- Logo Section -->
+    <div class="brand-section">
+      <a class="brand-link" routerLink="/">
+        <div class="logo-container">
+          <svg width="32" height="32" viewBox="0 0 32 32" class="logo-icon">
+            <path d="M16 2L20 10L30 10L22 16L26 24L16 20L6 24L10 16L2 10L12 10Z" fill="#2d5016"/>
+          </svg>
+          <span class="brand-text">TravelTracker</span>
+        </div>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" routerLink="/trips">Trips</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/social">Social</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/reviews">Reviews</a></li>
-        </ul>
-        <div class="d-flex">
-          <a routerLink="/login" class="btn btn-outline-light me-2">Log In</a>
-          <a routerLink="/signup" class="btn btn-success">Sign Up</a>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="main-nav">
+      <a class="nav-link" routerLink="/trips" routerLinkActive="active">
+        <i class="fas fa-globe nav-icon"></i>
+        Public Trips
+      </a>
+      <a *ngIf="isAuthenticated" class="nav-link" routerLink="/your-trips" routerLinkActive="active">
+        <i class="fas fa-user nav-icon"></i>
+        Your Trips
+      </a>
+      <a class="nav-link" routerLink="/social" routerLinkActive="active">
+        <i class="fas fa-users nav-icon"></i>
+        Community
+      </a>
+      <a class="nav-link" routerLink="/reviews" routerLinkActive="active">
+        <i class="fas fa-star nav-icon"></i>
+        Reviews
+      </a>
+    </nav>
+
+    <!-- User Section -->
+    <div class="user-section">
+      <!-- Not Authenticated -->
+      <div *ngIf="!isAuthenticated" class="auth-buttons">
+        <button class="btn-login" (click)="loginWithGoogle()">
+          <i class="fab fa-google"></i>
+          <span>Sign in</span>
+        </button>
+      </div>
+      
+      <!-- Authenticated -->
+      <div *ngIf="isAuthenticated && currentUser" class="user-menu">
+        <div class="dropdown" [class.show]="isUserDropdownOpen">
+          <button class="user-button" type="button" (click)="toggleUserDropdown()">
+            <div class="user-avatar" [style.background-image]="currentUser.picture ? 'url(' + currentUser.picture + ')' : 'none'">
+              <span *ngIf="!currentUser.picture" class="avatar-initial">
+                {{ currentUser.name?.charAt(0)?.toUpperCase() }}
+              </span>
+            </div>
+            <div class="user-info">
+              <span class="user-name">{{ currentUser.name }}</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </button>
+          
+          <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+            <div class="dropdown-header">
+              <div class="user-avatar-large" [style.background-image]="currentUser.picture ? 'url(' + currentUser.picture + ')' : 'none'">
+                <span *ngIf="!currentUser.picture" class="avatar-initial">
+                  {{ currentUser.name?.charAt(0)?.toUpperCase() }}
+                </span>
+              </div>
+              <div class="user-details">
+                <div class="user-name-large">{{ currentUser.name }}</div>
+                <div class="user-email">{{ currentUser.email }}</div>
+              </div>
+            </div>
+            <!-- <div class="dropdown-divider"></div> -->
+            <!-- <a class="dropdown-item" href="#" routerLink="/profile" (click)="closeUserDropdown()">
+              <i class="fas fa-user"></i>
+              Profile
+            </a>
+            <a class="dropdown-item" href="#" routerLink="/settings" (click)="closeUserDropdown()">
+              <i class="fas fa-cog"></i>
+              Settings
+            </a> -->
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item logout-item" href="#" (click)="logout(); closeUserDropdown()">>
+              <i class="fas fa-sign-out-alt"></i>
+              Sign out
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </nav>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" type="button" (click)="toggleMobileMenu()">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <div class="mobile-nav-content">
+      <a class="mobile-nav-link" routerLink="/trips" (click)="closeMobileMenu()">
+        <i class="fas fa-globe"></i>
+        Public Trips
+      </a>
+      <a *ngIf="isAuthenticated" class="mobile-nav-link" routerLink="/your-trips" (click)="closeMobileMenu()">
+        <i class="fas fa-user"></i>
+        Your Trips
+      </a>
+      <a class="mobile-nav-link" routerLink="/social" (click)="closeMobileMenu()">
+        <i class="fas fa-users"></i>
+        Community
+      </a>
+      <a class="mobile-nav-link" routerLink="/reviews" (click)="closeMobileMenu()">
+        <i class="fas fa-star"></i>
+        Reviews
+      </a>
+      
+      <div class="mobile-auth-section">
+        <div *ngIf="!isAuthenticated">
+          <button class="mobile-login-btn" (click)="loginWithGoogle(); closeMobileMenu()">
+            <i class="fab fa-google"></i>
+            Sign in with Google
+          </button>
+        </div>
+        
+        <div *ngIf="isAuthenticated && currentUser" class="mobile-user-section">
+          <div class="mobile-user-info">
+            <div class="user-avatar-mobile" [style.background-image]="currentUser.picture ? 'url(' + currentUser.picture + ')' : 'none'">
+              <span *ngIf="!currentUser.picture" class="avatar-initial">
+                {{ currentUser.name?.charAt(0)?.toUpperCase() }}
+              </span>
+            </div>
+            <div class="mobile-user-details">
+              <div class="mobile-user-name">{{ currentUser.name }}</div>
+              <div class="mobile-user-email">{{ currentUser.email }}</div>
+            </div>
+          </div>
+          <!-- <a class="mobile-nav-link" href="#" routerLink="/profile" (click)="closeMobileMenu()">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+          <a class="mobile-nav-link" href="#" routerLink="/settings" (click)="closeMobileMenu()">
+            <i class="fas fa-cog"></i>
+            Settings
+          </a> -->
+          <a class="mobile-nav-link logout-link" href="#" (click)="logout(); closeMobileMenu()">
+            <i class="fas fa-sign-out-alt"></i>
+            Sign out
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>

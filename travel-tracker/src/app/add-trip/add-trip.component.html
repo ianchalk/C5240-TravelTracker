@@ -1,0 +1,364 @@
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0 text-primary">
+          <i class="fas fa-plus-circle me-2"></i>Add New Trip
+        </h2>
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+          <i class="fas fa-times me-2"></i>Cancel
+        </button>
+      </div>
+
+      <!-- User Information Display -->
+      <div *ngIf="isAuthenticated && currentUser" class="alert alert-info mb-4">
+        <i class="fas fa-user-circle me-2"></i>
+        Creating trip as: <strong>{{ currentUser.name }}</strong> ({{ currentUser.email }})
+      </div>
+
+      <!-- Authentication Warning -->
+      <div *ngIf="!isAuthenticated" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Authentication Required:</strong> You must be signed in to add a new trip. Redirecting you back to the trips page...
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="submitSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <strong>Success!</strong> Your trip has been created successfully. Redirecting to trips page...
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="submitError" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong>Error:</strong> {{ submitError }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="submitError = ''"></button>
+      </div>
+
+      <!-- Main Form -->
+      <form 
+        [formGroup]="addTripForm" 
+        (ngSubmit)="onSubmit()" 
+        novalidate
+        *ngIf="isAuthenticated">
+        
+        <!-- Trip Information Card -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="fas fa-info-circle me-2"></i>Trip Information
+            </h5>
+          </div>
+          <div class="card-body">
+            
+            <!-- Trip Name -->
+            <div class="mb-3">
+              <label for="tripName" class="form-label fw-bold">Trip Name *</label>
+              <input 
+                type="text" 
+                id="tripName"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('name')"
+                formControlName="name" 
+                placeholder="e.g., Summer Vacation 2025">
+              <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                {{ getFieldError('name') }}
+              </div>
+            </div>
+
+            <!-- Trip Description -->
+            <div class="mb-3">
+              <label for="tripDescription" class="form-label fw-bold">Description *</label>
+              <textarea 
+                id="tripDescription"
+                class="form-control" 
+                rows="3"
+                [class.is-invalid]="isFieldInvalid('description')"
+                formControlName="description" 
+                placeholder="Describe your trip..."></textarea>
+              <div *ngIf="isFieldInvalid('description')" class="invalid-feedback">
+                {{ getFieldError('description') }}
+              </div>
+            </div>
+
+            <!-- Public Trip Toggle -->
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="isPublic"
+                formControlName="isPublic">
+              <label class="form-check-label" for="isPublic">
+                <i class="fas fa-globe me-2"></i>Make this trip public
+              </label>
+              <small class="form-text text-muted d-block mt-1">
+                Public trips can be viewed by other users
+              </small>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Places Section -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="fas fa-map-marker-alt me-2"></i>Places to Visit
+            </h5>
+            <button 
+              type="button" 
+              class="btn btn-light btn-sm"
+              (click)="addPlace()">
+              <i class="fas fa-plus me-1"></i>Add Place
+            </button>
+          </div>
+          <div class="card-body">
+            
+            <!-- Places Array -->
+            <div formArrayName="places">
+              <div 
+                *ngFor="let place of places.controls; let i = index" 
+                class="place-form mb-4 p-3 border rounded bg-light"
+                [formGroupName]="i">
+                
+                <!-- Place Header -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="mb-0 text-success">
+                    <i class="fas fa-map-pin me-2"></i>Place {{ i + 1 }}
+                  </h6>
+                  <button 
+                    *ngIf="places.length > 1"
+                    type="button" 
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="removePlace(i)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+
+                <div class="row">
+                  
+                  <!-- Place Name -->
+                  <div class="col-md-6 mb-3">
+                    <label [for]="'placeName' + i" class="form-label fw-bold">Place Name *</label>
+                    <input 
+                      type="text" 
+                      [id]="'placeName' + i"
+                      class="form-control"
+                      [class.is-invalid]="isPlaceFieldInvalid(i, 'name')"
+                      formControlName="name" 
+                      placeholder="e.g., Eiffel Tower">
+                    <div *ngIf="isPlaceFieldInvalid(i, 'name')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'name') }}
+                    </div>
+                  </div>
+
+                  <!-- Address -->
+                  <div class="col-md-6 mb-3">
+                    <label [for]="'placeAddress' + i" class="form-label fw-bold">Address *</label>
+                    <div class="position-relative">
+                      <input 
+                        type="text" 
+                        [id]="'placeAddress' + i"
+                        class="form-control"
+                        [class.is-invalid]="isPlaceFieldInvalid(i, 'address')"
+                        formControlName="address" 
+                        placeholder="Start typing an address..."
+                        (input)="onAddressInput($event, i)"
+                        (focus)="onAddressFocus(i)"
+                        (blur)="onAddressBlur(i)"
+                        (keydown)="onAddressKeydown($event, i)"
+                        autocomplete="off">
+                      
+                      <!-- Autocomplete Dropdown -->
+                      <div 
+                        *ngIf="showAutocomplete[i] && addressPredictions[i]?.length > 0" 
+                        class="autocomplete-dropdown position-absolute w-100 bg-white border border-top-0 shadow-sm"
+                        style="z-index: 1050; max-height: 300px; overflow-y: auto;">
+                        <div 
+                          *ngFor="let prediction of addressPredictions[i]; let predIndex = index"
+                          class="autocomplete-item p-3 border-bottom cursor-pointer"
+                          [class.active]="predIndex === selectedPredictionIndex[i]"
+                          (mousedown)="selectPrediction(i, prediction)"
+                          (mouseenter)="selectedPredictionIndex[i] = predIndex"
+                          style="cursor: pointer;">
+                          <div class="fw-bold text-dark">{{ prediction.structured_formatting.main_text }}</div>
+                          <div class="text-muted small">{{ prediction.structured_formatting.secondary_text }}</div>
+                        </div>
+                      </div>
+                      
+                      <!-- Loading indicator -->
+                      <div 
+                        *ngIf="isLoadingPredictions[i]" 
+                        class="position-absolute end-0 top-50 translate-middle-y me-2">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div *ngIf="isPlaceFieldInvalid(i, 'address')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'address') }}
+                    </div>
+                    
+                    <!-- Selected address preview -->
+                    <div *ngIf="selectedAddresses[i]" class="mt-2">
+                      <div class="alert alert-success py-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <strong>Selected:</strong> {{ selectedAddresses[i].formatted_address }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Start Date -->
+                  <div class="col-md-4 mb-3">
+                    <label [for]="'startDate' + i" class="form-label fw-bold">Start Date *</label>
+                    <input 
+                      type="date" 
+                      [id]="'startDate' + i"
+                      class="form-control"
+                      [class.is-invalid]="isPlaceFieldInvalid(i, 'startDate')"
+                      formControlName="startDate">
+                    <div *ngIf="isPlaceFieldInvalid(i, 'startDate')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'startDate') }}
+                    </div>
+                  </div>
+
+                  <!-- End Date -->
+                  <div class="col-md-4 mb-3">
+                    <label [for]="'endDate' + i" class="form-label fw-bold">End Date *</label>
+                    <input 
+                      type="date" 
+                      [id]="'endDate' + i"
+                      class="form-control"
+                      [class.is-invalid]="isPlaceFieldInvalid(i, 'endDate')"
+                      formControlName="endDate">
+                    <div *ngIf="isPlaceFieldInvalid(i, 'endDate')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'endDate') }}
+                    </div>
+                  </div>
+
+                  <!-- Duration Display -->
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Duration</label>
+                    <div class="form-control-plaintext fw-bold text-primary">
+                      <i class="fas fa-calendar-day me-2"></i>
+                      {{ getDurationDisplay(i) || 'Select dates' }}
+                    </div>
+                  </div>
+
+                  <!-- Cost -->
+                  <div class="col-md-6 mb-3">
+                    <label [for]="'cost' + i" class="form-label fw-bold">Cost (Optional)</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input 
+                        type="number" 
+                        [id]="'cost' + i"
+                        class="form-control"
+                        [class.is-invalid]="isPlaceFieldInvalid(i, 'cost')"
+                        formControlName="cost" 
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00">
+                    </div>
+                    <div *ngIf="isPlaceFieldInvalid(i, 'cost')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'cost') }}
+                    </div>
+                  </div>
+
+                  <!-- Photos -->
+                  <div class="col-md-6 mb-3">
+                    <label [for]="'photos' + i" class="form-label fw-bold">Photos (Optional)</label>
+                    <input 
+                      type="file" 
+                      [id]="'photos' + i"
+                      class="form-control"
+                      multiple
+                      accept="image/*"
+                      (change)="onFileSelect($event, i)">
+                    <small class="form-text text-muted">Select multiple images</small>
+                    
+                    <!-- Selected Photos Display -->
+                    <div *ngIf="place.get('photos')?.value?.length > 0" class="mt-2">
+                      <div class="d-flex flex-wrap gap-2">
+                        <div 
+                          *ngFor="let photo of place.get('photos')?.value; let photoIndex = index"
+                          class="badge bg-secondary d-flex align-items-center">
+                          <i class="fas fa-image me-1"></i>
+                          {{ getPhotoName(photo) }}
+                          <button 
+                            type="button" 
+                            class="btn-close btn-close-white ms-2"
+                            style="font-size: 0.7em;"
+                            (click)="removePhoto(i, photoIndex)"></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="col-12 mb-3">
+                    <label [for]="'placeDescription' + i" class="form-label fw-bold">Description *</label>
+                    <textarea 
+                      [id]="'placeDescription' + i"
+                      class="form-control" 
+                      rows="2"
+                      [class.is-invalid]="isPlaceFieldInvalid(i, 'description')"
+                      formControlName="description" 
+                      placeholder="What will you do here?"></textarea>
+                    <div *ngIf="isPlaceFieldInvalid(i, 'description')" class="invalid-feedback">
+                      {{ getPlaceFieldError(i, 'description') }}
+                    </div>
+                  </div>
+
+                  <!-- Notes -->
+                  <div class="col-12 mb-3">
+                    <label [for]="'notes' + i" class="form-label fw-bold">Personal Notes (Optional)</label>
+                    <textarea 
+                      [id]="'notes' + i"
+                      class="form-control" 
+                      rows="2"
+                      formControlName="notes" 
+                      placeholder="Personal reminders, tips, etc."></textarea>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Validation message for places array -->
+            <div *ngIf="places.invalid && places.touched" class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              At least one place is required for your trip.
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="card shadow-sm">
+          <div class="card-body d-flex justify-content-between">
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary btn-lg"
+              (click)="onCancel()">
+              <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            
+            <button 
+              type="submit" 
+              class="btn btn-primary btn-lg"
+              [disabled]="isSubmitting || addTripForm.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i *ngIf="!isSubmitting" class="fas fa-save me-2"></i>
+              {{ isSubmitting ? 'Creating Trip...' : 'Create Trip' }}
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

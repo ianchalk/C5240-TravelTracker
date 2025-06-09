@@ -12,8 +12,13 @@
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/express-session": "^1.18.1",
     "@types/node": "^22.15.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "dotenv": "^16.5.0",
     "eslint": "^9.25.1",
+    "express": "^5.1.0",
     "install": "^0.13.0",
     "nodemon": "^3.1.10",
     "npm": "^11.3.0",
@@ -22,14 +27,18 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@angular/cdk": "^19.2.16",
     "@angular/cli": "^19.2.12",
+    "@angular/material": "^19.2.16",
+    "@angular/router": "^19.2.11",
     "@types/mongodb": "^4.0.6",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "typescript": "^5.8.3",
     "assert": "^2.1.0",
+    "express-session": "^1.18.1",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
-    "q": "^2.0.3"
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "q": "^2.0.3",
+    "typescript": "^5.8.3"
   }
 }

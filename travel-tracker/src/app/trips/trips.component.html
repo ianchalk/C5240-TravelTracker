@@ -1,56 +1,91 @@
-<!-- Add Trip Button -->
-<div class="d-flex justify-content-between align-items-center mb-4 trips-header">
-  <h2 class="mb-0">Your Trips</h2>
-  <button class="btn btn-success btn-lg px-4 shadow-sm">
-    <i class="fas fa-plus me-2"></i> Add New Trip
-  </button>
-</div>
+<!-- filepath: /Users/jenitza/Jenitza_Mac_Doc/Seattle_University/SpringQuarter2025/Software_as_Service/C5240-TravelTracker/travel-tracker/src/app/trips/trips.component.html -->
 
-<!-- Stats Bar -->
-<div class="row g-3 mb-5 stats-bar">
-  <div class="col-md-3 col-6">
-    <div class="card text-center shadow-sm border-0">
-      <div class="card-body">
-        <h5 class="card-title mb-1">Trips Taken</h5>
-        <p class="display-6 fw-bold mb-0">12</p>
+<div class="trips-container">
+  <div class="container-fluid">
+    <!-- Header Section -->
+    <div class="trips-header">
+      <div>
+        <h1 class="trips-title">Community Travel Adventures</h1>
+        <p class="trips-subtitle">Discover amazing trips shared by our community</p>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input 
+            type="text" 
+            class="form-control search-input" 
+            placeholder="Search trips by name..."
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInput()"
+            (keyup.enter)="performSearch()">
+          <button 
+            class="btn btn-clear" 
+            *ngIf="searchQuery" 
+            (click)="clearSearch()"
+            title="Clear search">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-3 col-6">
-    <div class="card text-center shadow-sm border-0">
-      <div class="card-body">
-        <h5 class="card-title mb-1">Total Spent</h5>
-        <p class="display-6 fw-bold mb-0">$8,400</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 col-6">
-    <div class="card text-center shadow-sm border-0">
-      <div class="card-body">
-        <h5 class="card-title mb-1">Countries Visited</h5>
-        <p class="display-6 fw-bold mb-0">7</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 col-6">
-    <div class="card text-center shadow-sm border-0">
-      <div class="card-body">
-        <h5 class="card-title mb-1">Upcoming Trips</h5>
-        <p class="display-6 fw-bold mb-0">2</p>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Previous Trips Grid -->
-<h3 class="mb-4">Previous Trips</h3>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-  <div class="col" *ngFor="let trip of dummyTrips; let i = index">
-    <div class="card h-100 shadow-sm travel-tracker-card" (click)="viewTripDetail(i)" style="cursor: pointer;">
-      <img src="{{trip.image}}" class="card-img-top" alt="{{trip.name}}">
-      <div class="card-body">
-        <h5 class="card-title">{{trip.name}}</h5>
-        <p class="card-text text-muted small">{{trip.location}}</p>
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="loading-text">Gathering your travel memories...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="alert alert-warning" *ngIf="error">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem;"></i>
+        <div>
+          <h5 class="mb-1">Oops! Something went wrong</h5>
+          <p class="mb-2">We couldn't load your trips right now. Please try again.</p>
+          <button class="btn btn-primary" (click)="fetchTrips()">
+            <i class="fas fa-redo me-2"></i>Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading && !error && trips.length === 0">
+      <i class="fas fa-suitcase-rolling empty-state-icon"></i>
+      <h3 class="empty-state-title">No Public Trips Yet</h3>
+      <p class="empty-state-text">Be the first to share your adventure! Add a trip and inspire others to explore the world.</p>
+      <button 
+        class="btn add-trip-btn mt-3" 
+        [class.btn-success]="isAuthenticated"
+        [class.btn-secondary]="!isAuthenticated"
+        [disabled]="!isAuthenticated"
+        (click)="goToAddTrip()"
+        [title]="isAuthenticated ? 'Share your first trip' : 'Please sign in to share trips'">
+        <i class="fas fa-plus me-2"></i> 
+        {{ isAuthenticated ? 'Share Your First Trip' : 'Sign In to Share Trip' }}
+      </button>
+    </div>
+
+    <!-- Trip Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 trips-grid" *ngIf="!loading && trips.length > 0">
+      <div class="col" *ngFor="let trip of trips; let i = index">
+        <div class="card travel-tracker-card h-100" (click)="viewTripDetail(i)">
+          <div class="card-img-container">
+            <img [src]="trip.image" class="card-img-top" [alt]="trip.name">
+            <div class="card-img-overlay"></div>
+          </div>
+          <div class="card-body trip-card-body">
+            <h5 class="trip-title">{{trip.name}}</h5>
+            <p class="trip-author" *ngIf="trip.userId?.name">
+              <i class="fas fa-user author-icon"></i>
+              By {{trip.userId?.name}}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
