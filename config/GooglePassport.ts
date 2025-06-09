@@ -9,12 +9,12 @@ const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const callbackURL = process.env.CALLBACK_URL || "http://localhost:8080/auth/google/callback";
 
 if (!googleClientId || !googleClientSecret) {
-  console.error('❌ Google OAuth credentials not found in environment variables!');
+  console.error('Google OAuth credentials not found in environment variables!');
   console.error('Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env file');
   process.exit(1);
 }
 
-console.log('✅ Google OAuth configured with callback URL:', callbackURL);
+console.log('Google OAuth configured with callback URL:', callbackURL);
 
 passport.use(new GoogleStrategy({
     clientID: googleClientId,
@@ -34,14 +34,14 @@ passport.use(new GoogleStrategy({
 
       if (user) {
         // User exists - update last sign-in time
-        console.log('✅ Existing user found, updating last sign-in time');
+        console.log('Existing user found, updating last sign-in time');
         user.lastSignedIn = new Date();
         user.isActive = true;
         await user.save();
-        console.log('✅ User updated:', user.userId);
+        console.log('User updated:', user.userId);
       } else {
         // New user - create in database
-        console.log('🆕 Creating new user in database');
+        console.log('Creating new user in database');
         const newUserData = {
           userId: generateUserId(),
           googleId: profile.id,
@@ -55,13 +55,13 @@ passport.use(new GoogleStrategy({
 
         user = new UserModel(newUserData);
         await user.save();
-        console.log('✅ New user created:', user.userId);
+        console.log('New user created:', user.userId);
       }
 
       // Return the user for session storage
       return done(null, user);
     } catch (error) {
-      console.error('❌ Error in Google OAuth strategy:', error);
+      console.error('Error in Google OAuth strategy:', error);
       return done(error, null);
     }
   }
@@ -85,14 +85,14 @@ passport.deserializeUser(async (id: string, done) => {
     }
     
     if (user) {
-      console.log('✅ User deserialized successfully:', user.userId);
+      console.log('User deserialized successfully:', user.userId);
       done(null, user);
     } else {
-      console.log('❌ User not found during deserialization:', id);
+      console.log('User not found during deserialization:', id);
       done(null, false);
     }
   } catch (error) {
-    console.error('❌ Error deserializing user:', error);
+    console.error('Error deserializing user:', error);
         done(error, null);
   }
 });
