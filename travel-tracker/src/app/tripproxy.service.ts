@@ -10,7 +10,7 @@ export class TripproxyService {
   // Allow switching between Azure and local development
   azureUrl: string = 'https://traveltracker2025.azurewebsites.net/';
   localUrl: string = 'http://localhost:8080/';
-  hostUrl: string = this.localUrl; // Default to local since it's working
+  hostUrl: string = this.azureUrl; // Using azure URL by default
 
   constructor(private httpClient: HttpClient) { }
 
