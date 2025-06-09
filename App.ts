@@ -78,7 +78,7 @@ class App {
     this.express.use('/trip', this.tripRouter);
     
     // Default route
-    this.express.use('/', router);
+    this.express.use('/', express.static(__dirname+'/dist'));
   }
 
 }
