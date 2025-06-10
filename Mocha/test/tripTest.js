@@ -14,10 +14,10 @@ describe('Test trip by id result', function () {
 
 	var requestResult;
 	var response;
-	var testTripId = "1";
+	var testTripId = "1749177598741";
 		 
     before(function (done) {
-        chai.request("https://traveltracker2025.azurewebsites.net/")
+        chai.request('https://traveltracker2025.azurewebsites.net/')
 			.get("/trip/" + testTripId)
 			.end(function (err, res) {
 				requestResult = res.body;
@@ -63,26 +63,4 @@ describe('Test trip by id result', function () {
     it('The returned object should match the requested tripId', function () {
         expect(requestResult.tripId).to.equal(testTripId);
     });
-
-    // it('Should return an object', function (){
-	// 	expect(response).to.have.status(200);
-    // //    expect(response.body).to.be.an('object');
-	// 	expect(response).to.have.headers;
-    // });
-    
-	// it('The object has known properties', function(){
-	//     expect(requestResult[0]).to.include.keys('name');
-	//     expect(requestResult[0]).to.include.keys('_id');
-	// 	expect(response.body[0]).to.include.keys('listId');
-    //     expect(response.body[0]).to.include.keys('description');
-	// 	expect(response.body).to.not.be.a.string;
-	// });
-
-	// it('The object have the expected properties', function(){
-	// 	expect(requestResult[0]).to.have.property('_id');
-	// 	expect(response.body[0]).to.have.deep.property('listId');
-    //     expect(requestResult[0]).to.have.property('name');
-    //     expect(requestResult[0]).to.have.property('description');
-	// });	
-	
 });

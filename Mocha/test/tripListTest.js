@@ -16,7 +16,7 @@ describe('Test trip lists result', function () {
 	var response;
 		 
     before(function (done) {
-        chai.request("https://traveltracker2025.azurewebsites.net/")
+        chai.request('https://traveltracker2025.azurewebsites.net/')
 			.get("/trip")
 			.end(function (err, res) {
 				requestResult = res.body;
@@ -42,7 +42,7 @@ describe('Test trip lists result', function () {
 	});
 
 	it('The elements in the array have the expected properties', function(){
-		expect(response.body).to.have.length(3);
+		expect(response.body).to.have.length(6);
 		expect(response.body).to.satisfy(
 			function (body) {
 				for (var i = 0; i < body.length; i++) {
