@@ -1,4 +1,7 @@
 import {App} from './App';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const port = process.env.PORT || 8080;
 const dbUser = process.env.DB_USER;
