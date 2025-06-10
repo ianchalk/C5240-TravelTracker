@@ -158,3 +158,6 @@ Db
 
 expressServer/.env
 expressServer/.env
+travel-tracker/src/environments/environment.prod.ts
+travel-tracker/src/environments/environment.prod.ts
+travel-tracker/src/environments/environment.prod.ts
