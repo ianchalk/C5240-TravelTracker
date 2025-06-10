@@ -5,6 +5,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var passport = require("passport");
 var session = require("express-session");
+var path = require("path");
 var TripRouter_1 = require("./routes/TripRouter");
 var AuthRouter_1 = require("./routes/AuthRouter");
 var GooglePassport_1 = require("./config/GooglePassport");
@@ -53,13 +54,16 @@ var App = /** @class */ (function () {
     };
     // Configure API endpoints.
     App.prototype.routes = function () {
-        var router = express.Router();
         // Authentication routes
         this.express.use('/auth', this.authRouter);
         // Trip management routes
         this.express.use('/trip', this.tripRouter);
         // Default route
-        this.express.use('/', express.static(__dirname + '/dist'));
+        this.express.use('/', express.static(path.join(__dirname, 'dist')));
+        // Catches all other routes
+        this.express.get(/.*/, function (_req, res) {
+            res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+        });
     };
     return App;
 }());
