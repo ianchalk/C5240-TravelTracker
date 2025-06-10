@@ -19,8 +19,9 @@ var App = /** @class */ (function () {
         this.authRouter = new AuthRouter_1.AuthRouter().router;
         this.routes();
     }
+    // Configure Express middleware.
     App.prototype.middleware = function (sessionSecret) {
-        // Increase payload size limits for photo uploads
+        // Increased payload size limits for photo uploads
         this.express.use(bodyParser.json({ limit: '50mb' }));
         this.express.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
         // Session configuration
@@ -39,7 +40,14 @@ var App = /** @class */ (function () {
         // CORS configuration
         this.express.use(function (req, res, next) {
             res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            res.header("Access-Control-Allow-Credentials", "true");
+            // Handle preflight OPTIONS request
+            if (req.method === 'OPTIONS') {
+                res.sendStatus(200);
+                return;
+            }
             next();
         });
     };
