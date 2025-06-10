@@ -32,7 +32,8 @@ const UserSchema = new mongoose.Schema({
     dateSignedUp: {
         type: Date,
         default: Date.now,
-        required: true
+        required: true,
+        index: true
     },
     lastSignedIn: {
         type: Date,
@@ -49,11 +50,6 @@ const UserSchema = new mongoose.Schema({
     timestamps: true  // Adds createdAt and updatedAt fields
 });
 
-// Create indexes for better performance
-UserSchema.index({ googleId: 1 });
-UserSchema.index({ email: 1 });
-UserSchema.index({ userId: 1 });
-UserSchema.index({ dateSignedUp: 1 });
 
 // Create and export the User model
 export const UserModel = mongoose.model<IUserModel>('User', UserSchema);
