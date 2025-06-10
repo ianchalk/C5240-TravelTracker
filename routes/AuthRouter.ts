@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-const passport = require('../config/GooglePassport');
+import * as passport from 'passport';
 
 class AuthRouter {
   public router: Router;
