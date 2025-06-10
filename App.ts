@@ -17,22 +17,22 @@ class App {
   public authRouter: express.Router;
 
   //Run configuration methods on the Express instance.
-  constructor(mongoDBConnection:string) {
+  constructor(mongoDBConnection:string, sessionSecret:string) {
     this.express = express();
-    this.middleware();
+    this.middleware(sessionSecret);
     this.tripRouter = new TripRouter(mongoDBConnection).router;
     this.authRouter = new AuthRouter().router;
     this.routes();
   }
 
-  private middleware(): void {
+  private middleware(sessionSecret:string): void {
     // Increase payload size limits for photo uploads
     this.express.use(bodyParser.json({ limit: '50mb' }));
     this.express.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
     
     // Session configuration
     this.express.use(session({
-      secret: process.env.SESSION_SECRET || 'your-secret-key',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
