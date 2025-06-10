@@ -1,7 +1,9 @@
-// Using CommonJS require for all imports to avoid module resolution issues
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+import * as passport from 'passport';
+import * as dotenv from 'dotenv';
+
+let GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { UserModel, generateUserId } = require('../model/UserModel');
+dotenv.config();
 
 // Configure Google OAuth strategy
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
