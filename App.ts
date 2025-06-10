@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as passport from 'passport';
 import * as session from 'express-session';
+import * as path from 'path';
 
 import { TripRouter } from './routes/TripRouter';
 import { AuthRouter } from './routes/AuthRouter';
@@ -67,7 +68,6 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
-    let router = express.Router();
 
     // Authentication routes
     this.express.use('/auth', this.authRouter);
@@ -76,7 +76,12 @@ class App {
     this.express.use('/trip', this.tripRouter);
     
     // Default route
-    this.express.use('/', express.static(__dirname+'/dist'));
+    this.express.use('/', express.static(path.join(__dirname, 'dist')));
+
+    // Catches all other routes
+    this.express.get(/.*/, (_req, res) => {
+      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
   }
 }
 
