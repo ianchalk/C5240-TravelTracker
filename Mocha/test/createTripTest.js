@@ -9,24 +9,38 @@ var should = chai.should();
 var http = require('http');
 chai.use(chaiHttp);
 
-// NEW TEST SUITE: Test for creating a new trip
-describe('Test POST /trip/create', function () {
+describe('Test POST /trip/create-with-places', function () {
     
     const tripId = Date.now().toString();
     var requestResult;
     var response;
-    var tripToCreate = {
-        name: 'Trip to the Alps',
-        description: 'A test trip created by Mocha and Chai-HTTP',
-        tripId: tripId,
-        userId: '68487e36d12459e849b02549', // A placeholder user ID from your test DB
-        isPublic: true
+    var tripWithPlacesToCreate = {
+        name: 'Culinary Tour of Italy',
+        description: 'A delicious journey through various Italian cities.',
+        userId: '68476a58090ae0e735e64c33',
+        isPublic: true,
+        places: [
+            {
+                name: 'Roman Colosseum',
+                description: 'Historical site visit.',
+                startDate: new Date('2025-08-01'),
+                endDate: new Date('2025-08-02'),
+                cost: 50
+            },
+            {
+                name: 'Florence Art Gallery',
+                description: 'See the statue of David.',
+                startDate: new Date('2025-08-03'),
+                endDate: new Date('2025-08-04'),
+                cost: 75
+            }
+        ]
     };
 
     before(function(done) {
         chai.request('https://traveltracker2025.azurewebsites.net/')
-            .post('/trip/create')
-            .send(tripToCreate) // Send the trip data in the request body
+            .post('/trip/create-with-places')
+            .send(tripWithPlacesToCreate)
             .end(function(err, res) {
                 requestResult = res.body;
                 response = res;
@@ -36,7 +50,6 @@ describe('Test POST /trip/create', function () {
     });
 
     it('Should return status 201 Created', function() {
-        // According to your TripModel.ts, a successful creation returns 201
         expect(response).to.have.status(201);
     });
 
@@ -49,17 +62,28 @@ describe('Test POST /trip/create', function () {
     });
 
     it('Returned object should have the correct properties', function() {
-        expect(requestResult).to.have.property('_id');
-        expect(requestResult).to.have.property('name');
-        expect(requestResult).to.have.property('description');
-        expect(requestResult).to.have.property('tripId');
-        expect(requestResult).to.have.property('userId');
+        const createdTrip = requestResult.trip;
+
+        expect(createdTrip).to.have.property('_id');
+        expect(createdTrip).to.have.property('name');
+        expect(createdTrip).to.have.property('description');
+        expect(createdTrip).to.have.property('tripId');
+        expect(createdTrip).to.have.property('userId');
     });
 
-    it('Returned object values should match the sent data', function() {
-        expect(requestResult.name).to.equal(tripToCreate.name);
-        expect(requestResult.description).to.equal(tripToCreate.description);
-        expect(requestResult.tripId).to.equal(tripToCreate.tripId);
-        expect(requestResult.userId).to.equal(tripToCreate.userId);
+    it('The created trip data within the response should be correct', function() {
+        const createdTrip = requestResult.trip;
+
+        // Check values that should match the request
+        expect(createdTrip.name).to.equal(tripWithPlacesToCreate.name);
+        expect(createdTrip.description).to.equal(tripWithPlacesToCreate.description);
+        expect(createdTrip.userId).to.equal(tripWithPlacesToCreate.userId);
+        expect(createdTrip.isPublic).to.equal(tripWithPlacesToCreate.isPublic);
+    });
+
+    it('The created trip data within the response should be correct', function() {
+        const createdTrip = requestResult.trip;
+        expect(createdTrip.name).to.equal(tripWithPlacesToCreate.name);
+        expect(createdTrip.userId).to.equal(tripWithPlacesToCreate.userId);
     });
 });
