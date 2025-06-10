@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,120 +35,123 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
-// Using CommonJS require for all imports to avoid module resolution issues
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
+Object.defineProperty(exports, "__esModule", { value: true });
+var passport = require("passport");
+var GoogleStrategy = require('passport-google-oauth20-with-people-api').Strategy;
 var _a = require('../model/UserModel'), UserModel = _a.UserModel, generateUserId = _a.generateUserId;
-// Configure Google OAuth strategy
-var googleClientId = process.env.GOOGLE_CLIENT_ID;
-var googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-var callbackURL = process.env.CALLBACK_URL || "https://traveltracker2025.azurewebsites.net/auth/google/callback";
-if (!googleClientId || !googleClientSecret) {
-    console.error('❌ Google OAuth credentials not found in environment variables!');
-    console.error('Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env file');
-    process.exit(1);
-}
-console.log('✅ Google OAuth configured with callback URL:', callbackURL);
-passport.use(new GoogleStrategy({
-    clientID: googleClientId,
-    clientSecret: googleClientSecret,
-    callbackURL: callbackURL
-}, function (accessToken, refreshToken, profile, done) { return __awaiter(_this, void 0, void 0, function () {
-    var user, newUserData, error_1;
-    var _a, _b, _c, _d, _e, _f;
-    return __generator(this, function (_g) {
-        switch (_g.label) {
-            case 0:
-                _g.trys.push([0, 6, , 7]);
-                console.log('🔍 Google OAuth Profile received:', {
-                    id: profile.id,
-                    email: (_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value,
-                    name: profile.displayName
-                });
-                return [4 /*yield*/, UserModel.findOne({ googleId: profile.id })];
-            case 1:
-                user = _g.sent();
-                if (!user) return [3 /*break*/, 3];
-                // User exists - update last sign-in time
-                console.log('✅ Existing user found, updating last sign-in time');
-                user.lastSignedIn = new Date();
-                user.isActive = true;
-                return [4 /*yield*/, user.save()];
-            case 2:
-                _g.sent();
-                console.log('✅ User updated:', user.userId);
-                return [3 /*break*/, 5];
-            case 3:
-                // New user - create in database
-                console.log('🆕 Creating new user in database');
-                newUserData = {
-                    userId: generateUserId(),
-                    googleId: profile.id,
-                    email: ((_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value) || '',
-                    name: profile.displayName || '',
-                    picture: ((_f = (_e = profile.photos) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.value) || '',
-                    dateSignedUp: new Date(),
-                    lastSignedIn: new Date(),
-                    isActive: true
-                };
-                user = new UserModel(newUserData);
-                return [4 /*yield*/, user.save()];
-            case 4:
-                _g.sent();
-                console.log('✅ New user created:', user.userId);
-                _g.label = 5;
-            case 5: 
-            // Return the user for session storage
-            return [2 /*return*/, done(null, user)];
-            case 6:
-                error_1 = _g.sent();
-                console.error('❌ Error in Google OAuth strategy:', error_1);
-                return [2 /*return*/, done(error_1, null)];
-            case 7: return [2 /*return*/];
+var GooglePassport = /** @class */ (function () {
+    function GooglePassport() {
+        var _this = this;
+        this.googleClientId = process.env.GOOGLE_CLIENT_ID;
+        this.googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+        var callbackURL = process.env.CALLBACK_URL || "http://localhost:8080/auth/google/callback";
+        if (!this.googleClientId || !this.googleClientSecret) {
+            console.error('Google OAuth credentials not found in environment variables!');
+            console.error('Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env file');
+            process.exit(1);
         }
-    });
-}); }));
-// Serialize user for the session - store only the user ID
-passport.serializeUser(function (user, done) {
-    console.log('🔄 Serializing user for session:', user._id || user.userId);
-    done(null, user._id || user.userId);
-});
-// Deserialize user from the session - retrieve full user from database
-passport.deserializeUser(function (id, done) { return __awaiter(_this, void 0, void 0, function () {
-    var user, error_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 4, , 5]);
-                console.log('🔄 Deserializing user from session:', id);
-                return [4 /*yield*/, UserModel.findById(id)];
-            case 1:
-                user = _a.sent();
-                if (!!user) return [3 /*break*/, 3];
-                return [4 /*yield*/, UserModel.findOne({ userId: id })];
-            case 2:
-                user = _a.sent();
-                _a.label = 3;
-            case 3:
-                if (user) {
-                    console.log('✅ User deserialized successfully:', user.userId);
-                    done(null, user);
+        console.log('Google OAuth configured with callback URL:', callbackURL);
+        passport.use(new GoogleStrategy({
+            clientID: this.googleClientId,
+            clientSecret: this.googleClientSecret,
+            callbackURL: callbackURL
+        }, function (accessToken, refreshToken, profile, done) { return __awaiter(_this, void 0, void 0, function () {
+            var user, newUserData, error_1;
+            var _a, _b, _c, _d, _e, _f;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
+                    case 0:
+                        _g.trys.push([0, 6, , 7]);
+                        console.log('🔍 Google OAuth Profile received:', {
+                            id: profile.id,
+                            email: (_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value,
+                            name: profile.displayName
+                        });
+                        return [4 /*yield*/, UserModel.findOne({ googleId: profile.id })];
+                    case 1:
+                        user = _g.sent();
+                        if (!user) return [3 /*break*/, 3];
+                        // User exists - update last sign-in time
+                        console.log('Existing user found, updating last sign-in time');
+                        user.lastSignedIn = new Date();
+                        user.isActive = true;
+                        return [4 /*yield*/, user.save()];
+                    case 2:
+                        _g.sent();
+                        console.log('User updated:', user.userId);
+                        return [3 /*break*/, 5];
+                    case 3:
+                        // New user - create in database
+                        console.log('Creating new user in database');
+                        newUserData = {
+                            userId: generateUserId(),
+                            googleId: profile.id,
+                            email: ((_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value) || '',
+                            name: profile.displayName || '',
+                            picture: ((_f = (_e = profile.photos) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.value) || '',
+                            dateSignedUp: new Date(),
+                            lastSignedIn: new Date(),
+                            isActive: true
+                        };
+                        user = new UserModel(newUserData);
+                        return [4 /*yield*/, user.save()];
+                    case 4:
+                        _g.sent();
+                        console.log('New user created:', user.userId);
+                        _g.label = 5;
+                    case 5: 
+                    // Return the user for session storage
+                    return [2 /*return*/, done(null, user)];
+                    case 6:
+                        error_1 = _g.sent();
+                        console.error('Error in Google OAuth strategy:', error_1);
+                        return [2 /*return*/, done(error_1, null)];
+                    case 7: return [2 /*return*/];
                 }
-                else {
-                    console.log('❌ User not found during deserialization:', id);
-                    done(null, false);
+            });
+        }); }));
+        // Serialize user for the session - store only the user ID
+        passport.serializeUser(function (user, done) {
+            console.log('Serializing user for session:', user._id || user.userId);
+            done(null, user._id || user.userId);
+        });
+        // Deserialize user from the session - retrieve full user from database
+        passport.deserializeUser(function (id, done) { return __awaiter(_this, void 0, void 0, function () {
+            var user, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        console.log('Deserializing user from session:', id);
+                        return [4 /*yield*/, UserModel.findById(id)];
+                    case 1:
+                        user = _a.sent();
+                        if (!!user) return [3 /*break*/, 3];
+                        return [4 /*yield*/, UserModel.findOne({ userId: id })];
+                    case 2:
+                        user = _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        if (user) {
+                            console.log('User deserialized successfully:', user.userId);
+                            done(null, user);
+                        }
+                        else {
+                            console.log('User not found during deserialization:', id);
+                            done(null, false);
+                        }
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_2 = _a.sent();
+                        console.error('Error deserializing user:', error_2);
+                        done(error_2, null);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
-                return [3 /*break*/, 5];
-            case 4:
-                error_2 = _a.sent();
-                console.error('❌ Error deserializing user:', error_2);
-                done(error_2, null);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
-        }
-    });
-}); });
-// Export passport using CommonJS
-module.exports = passport;
+            });
+        }); });
+    }
+    return GooglePassport;
+}());
+exports.default = GooglePassport;
 //# sourceMappingURL=GooglePassport.js.map
