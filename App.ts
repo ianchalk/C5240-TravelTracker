@@ -1,12 +1,11 @@
 import * as express from 'express';
-import * as url from 'url';
 import * as bodyParser from 'body-parser';
+import * as passport from 'passport';
+import * as session from 'express-session';
 
 import { TripRouter } from './routes/TripRouter';
 import { AuthRouter } from './routes/AuthRouter';
-
-const passport = require('./config/GooglePassport');
-const session = require('express-session');
+import GooglePassportObj from './config/GooglePassport';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -15,9 +14,12 @@ class App {
   public express: express.Application;
   public tripRouter: express.Router;
   public authRouter: express.Router;
+  public googlePassportObj:GooglePassportObj;
 
   //Run configuration methods on the Express instance.
   constructor(mongoDBConnection:string, sessionSecret:string) {
+    this.googlePassportObj = new GooglePassportObj();
+
     this.express = express();
     this.middleware(sessionSecret);
     this.tripRouter = new TripRouter(mongoDBConnection).router;
@@ -25,8 +27,9 @@ class App {
     this.routes();
   }
 
+  // Configure Express middleware.
   private middleware(sessionSecret:string): void {
-    // Increase payload size limits for photo uploads
+    // Increased payload size limits for photo uploads
     this.express.use(bodyParser.json({ limit: '50mb' }));
     this.express.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
     
@@ -47,7 +50,7 @@ class App {
     
     // CORS configuration
     this.express.use( (req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+      res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
       res.header("Access-Control-Allow-Credentials", "true");
@@ -75,7 +78,6 @@ class App {
     // Default route
     this.express.use('/', express.static(__dirname+'/dist'));
   }
-
 }
 
 export {App}; 
