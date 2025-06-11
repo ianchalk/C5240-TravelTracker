@@ -17,7 +17,7 @@ describe('Test POST /trip/create-with-places', function () {
     var tripWithPlacesToCreate = {
         name: 'Culinary Tour of Italy',
         description: 'A delicious journey through various Italian cities.',
-        userId: '68476a58090ae0e735e64c33',
+        userId: '683e653d91889681b228638d',
         isPublic: true,
         places: [
             {
